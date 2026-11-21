@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#0f172a" />
-  <title>MD Quiz Reel Maker v9 — 9:16 Reels + 16:9 YouTube + Native Android Hindi TTS</title>
+  <title>MD Quiz Reel Maker v10 — Direct Gallery Standard MP4 + Hindi TTS</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -1128,7 +1128,7 @@
       <div class="brand">
         <div class="brand-icon">▶</div>
         <div>
-          <h1>MD Quiz Reel Maker v9</h1>
+          <h1>MD Quiz Reel Maker v10</h1>
           <p>Reels/Shorts (9:16) और YouTube (16:9) के लिए Manual, PDF व Hindi Voice MP4 मेकर</p>
         </div>
       </div>
@@ -1531,11 +1531,11 @@
             </div>
           </div>
           <div class="btn-row">
-            <button type="button" class="btn btn-primary" style="flex:1;" id="btnDownloadVideo">⬇️ वीडियो डाउनलोड करें</button>
+            <button type="button" class="btn btn-primary" style="flex:1;" id="btnDownloadVideo">⬇️ गैलरी में सेव करें</button>
             <button type="button" class="btn btn-warning" style="flex:1;" id="btnShareVideo">📤 शेयर करें</button>
           </div>
           <div class="hint" id="savePathHint" style="margin-top:8px;">
-            💡 बड़े वीडियो (20–100 MB) सुरक्षित रूप से छोटे हिस्सों में सेव होते हैं। सेव होने तक ऐप बंद न करें।
+            💡 v10 ऑटो MP4 फिक्सर: सेव होते ही वीडियो की पूरी लंबाई (Full Duration) गैलरी (Movies/MD_Quiz_Videos) में दिखेगी और यह सीधे Instagram, Facebook व YouTube पर अपलोड होगा।
           </div>
         </div>
       </div>
@@ -1588,8 +1588,8 @@ Ans: C"></textarea>
 (() => {
   'use strict';
 
-  const STORAGE_KEY = 'md_quiz_reel_questions_v9';
-  const SETTINGS_KEY = 'md_quiz_reel_settings_v9';
+  const STORAGE_KEY = 'md_quiz_reel_questions_v10';
+  const SETTINGS_KEY = 'md_quiz_reel_settings_v10';
   const VOICE_DB_NAME = 'MDQuizReelVoices_v6';
   const LETTERS = ['A', 'B', 'C', 'D'];
   const TRANSITION_SEC = 0.45;
@@ -1827,6 +1827,7 @@ Ans: C"></textarea>
   let lastGeneratedMime = 'video/mp4';
   let lastSavedCacheUri = null;
   let lastSavedFileName = '';
+  let lastGeneratedDurationSec = 0;
   let isSavingOrSharing = false;
 
   // PDF Import State
@@ -2002,6 +2003,7 @@ Ans: C"></textarea>
     try {
       const savedQ =
         localStorage.getItem(STORAGE_KEY) ||
+        localStorage.getItem('md_quiz_reel_questions_v9') ||
         localStorage.getItem('md_quiz_reel_questions_v8') ||
         localStorage.getItem('md_quiz_reel_questions_v7') ||
         localStorage.getItem('md_quiz_reel_questions_v6') ||
@@ -2019,6 +2021,7 @@ Ans: C"></textarea>
       }
       const savedS =
         localStorage.getItem(SETTINGS_KEY) ||
+        localStorage.getItem('md_quiz_reel_settings_v9') ||
         localStorage.getItem('md_quiz_reel_settings_v8') ||
         localStorage.getItem('md_quiz_reel_settings_v7') ||
         localStorage.getItem('md_quiz_reel_settings_v6') ||
@@ -4917,8 +4920,13 @@ Ans: C"></textarea>
       showToast('वीडियो रिकॉर्डिंग में त्रुटि आई। कृपया Fast HD (720p) चुनकर दोबारा कोशिश करें।');
     };
 
-    recorder.onstop = () => {
+    let recordStartPerf = 0;
+
+    recorder.onstop = async () => {
       const wasAborted = abortRequested;
+      const recordedSec = recordStartPerf > 0
+        ? Math.max(1, (performance.now() - recordStartPerf) / 1000)
+        : Math.max(1, plan.totalDuration || 1);
       cleanupRecordingResources();
 
       if (wasAborted || !chunks.length) {
@@ -4930,14 +4938,32 @@ Ans: C"></textarea>
 
       const rawMime = recorder.mimeType || format.mime || 'video/mp4';
       const isActualMp4 = rawMime.toLowerCase().includes('mp4');
-      // CRITICAL FIX: Clean base MIME type (without ";codecs=...") so Android Download Manager & Web Share API accept it!
       const cleanMime = isActualMp4 ? 'video/mp4' : 'video/webm';
       lastGeneratedExt = isActualMp4 ? 'mp4' : 'webm';
       lastGeneratedMime = cleanMime;
-      lastGeneratedBlob = new Blob(chunks, { type: cleanMime });
-      chunks.length = 0; // Free chunk array memory immediately
+      lastGeneratedDurationSec = recordedSec;
+
+      let assembledBlob = new Blob(chunks, { type: cleanMime });
+      chunks.length = 0;
+
+      // Immediate in-place MP4 header duration patch (fixes preview & Chrome downloads instantly!)
+      if (isActualMp4) {
+        try {
+          assembledBlob = await patchMp4HeaderDuration(assembledBlob, recordedSec);
+        } catch (patchErr) {
+          console.warn('In-place MP4 header patch skipped:', patchErr);
+        }
+      }
+
+      lastGeneratedBlob = assembledBlob;
       lastSavedCacheUri = null;
       lastSavedFileName = buildFileName();
+
+      // Clear old temp cache video inside Android APK so storage stays clean
+      const vf = getVideoFixerPlugin();
+      if (vf && vf.cleanupCache) {
+        try { vf.cleanupCache().catch(() => {}); } catch (_) {}
+      }
 
       if (lastGeneratedUrl) URL.revokeObjectURL(lastGeneratedUrl);
       lastGeneratedUrl = URL.createObjectURL(lastGeneratedBlob);
@@ -4946,19 +4972,21 @@ Ans: C"></textarea>
       el.recordedVideo.load();
 
       const sizeMB = (lastGeneratedBlob.size / (1024 * 1024)).toFixed(2);
+      const durText = formatMmSs(recordedSec);
       el.formatBadge.className = isActualMp4 ? 'format-badge' : 'format-badge warn';
       el.formatBadge.textContent = isActualMp4
-        ? `✅ ${format.label} • साइज: ${sizeMB} MB`
-        : `⚠️ ${format.label} • साइज: ${sizeMB} MB (सीधे MP4 के लिए Chrome अपडेट करें)`;
+        ? `✅ ${format.label} • लंबाई: ${durText} • साइज: ${sizeMB} MB`
+        : `⚠️ ${format.label} • लंबाई: ${durText} • साइज: ${sizeMB} MB`;
 
       el.videoOutput.classList.add('active');
       el.previewStatus.textContent = 'वीडियो तैयार ✓';
-      showToast(`वीडियो बन गया (${sizeMB} MB)!`);
+      showToast(`वीडियो बन गया (${durText} • ${sizeMB} MB)!`);
     };
 
     recorder.start(250);
 
     const startTime = performance.now();
+    recordStartPerf = startTime;
     let lastTickKey = '';
     let lastSpokenQ = -1;
     let lastRevealQ = -1;
@@ -5035,6 +5063,112 @@ Ans: C"></textarea>
     } catch (_) {
       return false;
     }
+  }
+
+  function getVideoFixerPlugin() {
+    try {
+      const cap = window.Capacitor;
+      if (cap && cap.isNativePlatform && cap.isNativePlatform() && cap.Plugins && cap.Plugins.VideoFixer) {
+        return cap.Plugins.VideoFixer;
+      }
+    } catch (_) {}
+    return null;
+  }
+
+  function formatMmSs(totalSec) {
+    const s = Math.max(1, Math.round(Number(totalSec) || 0));
+    const mins = Math.floor(s / 60);
+    const secs = s % 60;
+    return `${mins}:${String(secs).padStart(2, '0')}`;
+  }
+
+  /**
+   * Pure-JS In-Place MP4 Header Duration Patcher (ISO/IEC 14496-12).
+   * Patches mvhd, tkhd, mdhd, and mehd durations in the first 256 KB moov header
+   * without shifting any byte offsets or loading the whole video into RAM.
+   */
+  async function patchMp4HeaderDuration(blob, durationSec) {
+    if (!blob || blob.size < 64 || !Number.isFinite(durationSec) || durationSec <= 0) {
+      return blob;
+    }
+    const scanLen = Math.min(blob.size, 256 * 1024);
+    const headBuf = await blob.slice(0, scanLen).arrayBuffer();
+    const view = new DataView(headBuf);
+    const bytes = new Uint8Array(headBuf);
+
+    const readType = (off) =>
+      String.fromCharCode(bytes[off + 4], bytes[off + 5], bytes[off + 6], bytes[off + 7]);
+
+    const writeU64 = (off, val) => {
+      const safe = Math.max(0, Math.round(val));
+      const hi = Math.floor(safe / 4294967296);
+      const lo = safe >>> 0;
+      view.setUint32(off, hi, false);
+      view.setUint32(off + 4, lo, false);
+    };
+
+    let mvhdTimescale = 1000;
+    let patched = 0;
+
+    function walk(start, end) {
+      let pos = start;
+      while (pos + 8 <= end) {
+        const size = view.getUint32(pos, false);
+        if (size < 8 || pos + size > end) break;
+        const type = readType(pos);
+
+        if (type === 'moov' || type === 'trak' || type === 'mdia' || type === 'mvex') {
+          walk(pos + 8, pos + size);
+        } else if (type === 'mvhd' && size >= 32) {
+          const ver = bytes[pos + 8];
+          if (ver === 0) {
+            const ts = view.getUint32(pos + 20, false) || 1000;
+            mvhdTimescale = ts;
+            view.setUint32(pos + 24, Math.min(0xFFFFFFFF, Math.round(durationSec * ts)), false);
+            patched++;
+          } else if (ver === 1 && size >= 44) {
+            const ts = view.getUint32(pos + 28, false) || 1000;
+            mvhdTimescale = ts;
+            writeU64(pos + 32, durationSec * ts);
+            patched++;
+          }
+        } else if (type === 'tkhd' && size >= 36) {
+          const ver = bytes[pos + 8];
+          if (ver === 0) {
+            view.setUint32(pos + 28, Math.min(0xFFFFFFFF, Math.round(durationSec * mvhdTimescale)), false);
+            patched++;
+          } else if (ver === 1 && size >= 48) {
+            writeU64(pos + 36, durationSec * mvhdTimescale);
+            patched++;
+          }
+        } else if (type === 'mdhd' && size >= 32) {
+          const ver = bytes[pos + 8];
+          if (ver === 0) {
+            const ts = view.getUint32(pos + 20, false) || 1000;
+            view.setUint32(pos + 24, Math.min(0xFFFFFFFF, Math.round(durationSec * ts)), false);
+            patched++;
+          } else if (ver === 1 && size >= 44) {
+            const ts = view.getUint32(pos + 28, false) || 1000;
+            writeU64(pos + 32, durationSec * ts);
+            patched++;
+          }
+        } else if (type === 'mehd' && size >= 16) {
+          const ver = bytes[pos + 8];
+          if (ver === 0) {
+            view.setUint32(pos + 12, Math.min(0xFFFFFFFF, Math.round(durationSec * mvhdTimescale)), false);
+            patched++;
+          } else if (ver === 1 && size >= 20) {
+            writeU64(pos + 12, durationSec * mvhdTimescale);
+            patched++;
+          }
+        }
+        pos += size;
+      }
+    }
+
+    walk(0, scanLen);
+    if (patched === 0) return blob;
+    return new Blob([headBuf, blob.slice(scanLen)], { type: blob.type || 'video/mp4' });
   }
 
   function setSaveProgress(active, pct = 0, msg = '') {
@@ -5177,11 +5311,52 @@ Ans: C"></textarea>
     const fileName = lastSavedFileName || buildFileName();
     lastSavedFileName = fileName;
 
-    // ===== PATH A: ANDROID CAPACITOR NATIVE APK (Chunked Save — works for 40 MB–200+ MB!) =====
+    // ===== PATH A: ANDROID CAPACITOR NATIVE APK (v10 Lossless MediaMuxer Remux + Direct Gallery Save!) =====
     if (isNativeCapacitorApp()) {
       setSaveButtonsBusy(true);
       try {
-        // 1. Primary: Phone's public Documents/MD_Quiz_Videos folder
+        const videoFixer = getVideoFixerPlugin();
+
+        // 0. BEST PATH (v10): Write chunks to Cache -> Native MediaMuxer Remux (fixes 1-sec bug!) -> Save to Gallery (Movies/MD_Quiz_Videos)
+        if (videoFixer && videoFixer.remuxAndSaveToGallery) {
+          try {
+            const rawCacheName = `raw_${Date.now()}.${lastGeneratedExt}`;
+            const writtenUri = await saveToCapacitorChunked(
+              lastGeneratedBlob,
+              rawCacheName,
+              'CACHE',
+              'वीडियो तैयार किया जा रहा है...'
+            );
+            if (writtenUri) {
+              setSaveProgress(true, 92, 'MP4 लंबाई (Header) ठीक करके गैलरी में सेव हो रहा है...');
+              const res = await videoFixer.remuxAndSaveToGallery({
+                inputPath: rawCacheName,
+                fileName,
+                mimeType: lastGeneratedMime,
+                saveToGallery: true
+              });
+
+              if (res && res.cacheUri) {
+                lastSavedCacheUri = res.cacheUri;
+              }
+              if (res && res.gallerySaved) {
+                const durSec = res.durationMs > 0 ? res.durationMs / 1000 : lastGeneratedDurationSec;
+                const durLabel = formatMmSs(durSec);
+                const modeNote = res.remuxed ? 'स्टैंडर्ड MP4 (Instagram/FB रेडी)' : 'MP4';
+                setSaveProgress(true, 100, 'गैलरी में सेव पूरा हुआ!');
+                if (el.savePathHint) {
+                  el.savePathHint.textContent = `✅ गैलरी में सेव: ${res.galleryPath} • असली लंबाई: ${durLabel} • ${modeNote}`;
+                }
+                showToast(`✅ गैलरी में सेव हो गया (लंबाई: ${durLabel})! अब सीधे Instagram/FB पर डालें।`);
+                return;
+              }
+            }
+          } catch (fixerErr) {
+            console.warn('VideoFixer remux/gallery path warning, falling back:', fixerErr);
+          }
+        }
+
+        // 1. Fallback: Phone's public Documents/MD_Quiz_Videos folder
         try {
           const docPath = `MD_Quiz_Videos/${fileName}`;
           const savedUri = await saveToCapacitorChunked(
@@ -5316,24 +5491,50 @@ Ans: C"></textarea>
     const fileName = lastSavedFileName || buildFileName();
     lastSavedFileName = fileName;
 
-    // ===== PATH A: ANDROID CAPACITOR NATIVE APK (Chunked Cache + Native Share Sheet) =====
+    // ===== PATH A: ANDROID CAPACITOR NATIVE APK (v10 Remuxed Standard MP4 Share!) =====
     if (isNativeCapacitorApp()) {
       setSaveButtonsBusy(true);
       try {
-        const cacheUri =
-          lastSavedCacheUri ||
-          (await saveToCapacitorChunked(
-            lastGeneratedBlob,
-            fileName,
-            'CACHE',
-            'शेयर के लिए वीडियो तैयार हो रहा है...'
-          ));
-        if (cacheUri) {
-          lastSavedCacheUri = cacheUri;
-          const ok = await invokeCapacitorShare(cacheUri, fileName);
+        let shareUri = lastSavedCacheUri;
+        if (!shareUri) {
+          const videoFixer = getVideoFixerPlugin();
+          if (videoFixer && videoFixer.remuxAndSaveToGallery) {
+            const rawCacheName = `raw_share_${Date.now()}.${lastGeneratedExt}`;
+            const rawUri = await saveToCapacitorChunked(
+              lastGeneratedBlob,
+              rawCacheName,
+              'CACHE',
+              'शेयर के लिए वीडियो तैयार हो रहा है...'
+            );
+            if (rawUri) {
+              setSaveProgress(true, 92, 'MP4 लंबाई (Header) ठीक की जा रही है...');
+              const res = await videoFixer.remuxAndSaveToGallery({
+                inputPath: rawCacheName,
+                fileName,
+                mimeType: lastGeneratedMime,
+                saveToGallery: false
+              });
+              if (res && res.cacheUri) {
+                shareUri = res.cacheUri;
+                lastSavedCacheUri = shareUri;
+              }
+            }
+          }
+          if (!shareUri) {
+            shareUri = await saveToCapacitorChunked(
+              lastGeneratedBlob,
+              fileName,
+              'CACHE',
+              'शेयर के लिए वीडियो तैयार हो रहा है...'
+            );
+            lastSavedCacheUri = shareUri;
+          }
+        }
+        if (shareUri) {
+          const ok = await invokeCapacitorShare(shareUri, fileName);
           if (ok) return;
         }
-        showToast('शेयर शीट खुल नहीं पाई। कृपया ⬇️ वीडियो डाउनलोड करें बटन उपयोग करें।');
+        showToast('शेयर शीट खुल नहीं पाई। कृपया ⬇️ गैलरी में सेव करें बटन उपयोग करें।');
         return;
       } catch (err) {
         console.error('Capacitor Share error:', err);
@@ -5707,7 +5908,7 @@ Ans: C"></textarea>
         showToast('एक्सपोर्ट करने के लिए कोई प्रश्न नहीं है।');
         return;
       }
-      const payload = JSON.stringify({ app: 'MD Quiz Reel Maker', version: 9, questions, settings }, null, 2);
+      const payload = JSON.stringify({ app: 'MD Quiz Reel Maker', version: 10, questions, settings }, null, 2);
       const blob = new Blob([payload], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
