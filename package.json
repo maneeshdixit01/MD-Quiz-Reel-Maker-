@@ -1,7 +1,7 @@
 {
   "name": "md-quiz-reel-maker",
-  "version": "10.0.0",
-  "description": "Quiz Video Maker (9:16 Reels/Shorts + 16:9 YouTube) with Native Android Hindi TTS & Lossless Standard MP4 Gallery Remuxer",
+  "version": "11.0.0",
+  "description": "Quiz Video Maker v11 (Bright No-Fade First Frame + Larger Fonts + 9:16/16:9 + Native Hindi TTS + Standard MP4 Gallery Remuxer)",
   "scripts": {
     "build": "node -e \"const fs=require('fs'); fs.mkdirSync('www',{recursive:true}); ['index.html','manifest.webmanifest'].forEach(f=>fs.copyFileSync(f,'www/'+f));\""
   },

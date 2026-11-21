@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#0f172a" />
-  <title>MD Quiz Reel Maker v10 — Direct Gallery Standard MP4 + Hindi TTS</title>
+  <title>MD Quiz Reel Maker v11 — Bright Cover + High-Contrast Reels &amp; YouTube MP4</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -1128,7 +1128,7 @@
       <div class="brand">
         <div class="brand-icon">▶</div>
         <div>
-          <h1>MD Quiz Reel Maker v10</h1>
+          <h1>MD Quiz Reel Maker v11</h1>
           <p>Reels/Shorts (9:16) और YouTube (16:9) के लिए Manual, PDF व Hindi Voice MP4 मेकर</p>
         </div>
       </div>
@@ -1331,9 +1331,9 @@
           <div class="form-group">
             <label for="settingTimer">उल्टा टाइमर (सेकंड)</label>
             <select id="settingTimer">
-              <option value="5">5 सेकंड (5 → 0)</option>
+              <option value="5" selected>5 सेकंड (Reels/Shorts बेस्ट)</option>
               <option value="8">8 सेकंड (8 → 0)</option>
-              <option value="10" selected>10 सेकंड (10 → 0)</option>
+              <option value="10">10 सेकंड (10 → 0)</option>
               <option value="12">12 सेकंड (12 → 0)</option>
               <option value="15">15 सेकंड (15 → 0)</option>
             </select>
@@ -1452,8 +1452,8 @@
             <div class="form-group" style="margin-bottom:0;">
               <label for="settingVoiceTiming">⏱️ टाइमर कब शुरू हो?</label>
               <select id="settingVoiceTiming">
-                <option value="after_voice" selected>आवाज़ पूरी होने के बाद टाइमर चले</option>
-                <option value="with_voice">आवाज़ के साथ-साथ टाइमर तुरंत चले</option>
+                <option value="with_voice" selected>आवाज़ के साथ-साथ टाइमर तुरंत चले (Reels बेस्ट)</option>
+                <option value="after_voice">आवाज़ पूरी होने के बाद टाइमर चले</option>
               </select>
             </div>
             <div class="form-group" style="margin-bottom:0; display:flex; align-items:flex-end;">
@@ -1466,7 +1466,7 @@
             <input type="checkbox" id="settingMicCapture" class="switch" />
           </div>
           <div class="hint" id="ttsModeHint">
-            💡 <b>v9 ऑटो हिंदी TTS (APK):</b> Android APK के अंदर कंप्यूटर की हिंदी आवाज़ (प्रश्न, सही उत्तर व अंतिम संदेश) <b>बिना माइक के सीधे MP4 वीडियो में साफ जुड़ती है</b>। यदि आपने किसी प्रश्न पर अपनी खुद की आवाज़ रिकॉर्ड की है, तो उस प्रश्न पर आपकी रिकॉर्ड आवाज़ चलेगी।
+            💡 <b>v11 ऑटो हिंदी TTS (APK):</b> Android APK के अंदर कंप्यूटर की हिंदी आवाज़ (प्रश्न, सही उत्तर व अंतिम संदेश) <b>बिना माइक के सीधे MP4 वीडियो में साफ जुड़ती है</b>। यदि आपने किसी प्रश्न पर अपनी खुद की आवाज़ रिकॉर्ड की है, तो उस प्रश्न पर आपकी रिकॉर्ड आवाज़ चलेगी।
           </div>
         </div>
 
@@ -1535,7 +1535,7 @@
             <button type="button" class="btn btn-warning" style="flex:1;" id="btnShareVideo">📤 शेयर करें</button>
           </div>
           <div class="hint" id="savePathHint" style="margin-top:8px;">
-            💡 v10 ऑटो MP4 फिक्सर: सेव होते ही वीडियो की पूरी लंबाई (Full Duration) गैलरी (Movies/MD_Quiz_Videos) में दिखेगी और यह सीधे Instagram, Facebook व YouTube पर अपलोड होगा।
+            💡 v11 ऑटो MP4 फिक्सर: सेव होते ही वीडियो की पूरी लंबाई (Full Duration) गैलरी (Movies/MD_Quiz_Videos) में दिखेगी और यह सीधे Instagram, Facebook व YouTube पर अपलोड होगा।
           </div>
         </div>
       </div>
@@ -1588,11 +1588,11 @@ Ans: C"></textarea>
 (() => {
   'use strict';
 
-  const STORAGE_KEY = 'md_quiz_reel_questions_v10';
-  const SETTINGS_KEY = 'md_quiz_reel_settings_v10';
+  const STORAGE_KEY = 'md_quiz_reel_questions_v11';
+  const SETTINGS_KEY = 'md_quiz_reel_settings_v11';
   const VOICE_DB_NAME = 'MDQuizReelVoices_v6';
   const LETTERS = ['A', 'B', 'C', 'D'];
-  const TRANSITION_SEC = 0.45;
+  const TRANSITION_SEC = 0.25;
 
   // Dynamic script loader with multi-CDN fallback (so app NEVER blocks on startup or offline!)
   const scriptLoadPromises = {};
@@ -1658,103 +1658,103 @@ Ans: C"></textarea>
   const THEMES = {
     royal: {
       name: 'Royal Navy & Gold',
-      bgTop: '#070d1f',
-      bgMid: '#131f42',
-      bgBot: '#090e1f',
-      glow1: 'rgba(99, 102, 241, 0.28)',
-      glow2: 'rgba(245, 158, 11, 0.18)',
-      headerBg: 'rgba(255, 255, 255, 0.08)',
-      headerBorder: 'rgba(251, 191, 36, 0.45)',
-      headerText: '#fde68a',
-      timerTrack: 'rgba(255, 255, 255, 0.14)',
+      bgTop: '#08122b',
+      bgMid: '#16285a',
+      bgBot: '#091126',
+      glow1: 'rgba(99, 102, 241, 0.42)',
+      glow2: 'rgba(251, 191, 36, 0.28)',
+      headerBg: 'rgba(255, 255, 255, 0.14)',
+      headerBorder: '#fbbf24',
+      headerText: '#fef08a',
+      timerTrack: 'rgba(255, 255, 255, 0.18)',
       timerRing: '#fbbf24',
       timerUrgent: '#ef4444',
       timerDone: '#22c55e',
       timerText: '#ffffff',
-      qCardBg: 'rgba(15, 23, 42, 0.88)',
-      qCardBorder: 'rgba(251, 191, 36, 0.65)',
+      qCardBg: '#0c1836',
+      qCardBorder: '#fbbf24',
       qText: '#ffffff',
-      optBg: 'rgba(30, 41, 59, 0.92)',
-      optBorder: 'rgba(148, 163, 184, 0.35)',
-      optText: '#f8fafc',
+      optBg: '#1b2b4e',
+      optBorder: 'rgba(186, 210, 255, 0.50)',
+      optText: '#ffffff',
       optBadgeBg: '#4f46e5',
       optBadgeText: '#ffffff',
-      watermark: 'rgba(226, 232, 240, 0.72)'
+      watermark: '#e2e8f0'
     },
     saffron: {
       name: 'Saffron & Slate',
-      bgTop: '#1c0f07',
-      bgMid: '#2e1608',
-      bgBot: '#120a05',
-      glow1: 'rgba(249, 115, 22, 0.30)',
-      glow2: 'rgba(250, 204, 21, 0.18)',
-      headerBg: 'rgba(249, 115, 22, 0.16)',
-      headerBorder: 'rgba(251, 146, 60, 0.55)',
-      headerText: '#fed7aa',
-      timerTrack: 'rgba(255, 255, 255, 0.15)',
-      timerRing: '#f97316',
+      bgTop: '#241106',
+      bgMid: '#3d1d0a',
+      bgBot: '#180c04',
+      glow1: 'rgba(249, 115, 22, 0.44)',
+      glow2: 'rgba(250, 204, 21, 0.28)',
+      headerBg: 'rgba(249, 115, 22, 0.24)',
+      headerBorder: '#fdba74',
+      headerText: '#ffedd5',
+      timerTrack: 'rgba(255, 255, 255, 0.18)',
+      timerRing: '#fb923c',
       timerUrgent: '#ef4444',
       timerDone: '#22c55e',
       timerText: '#ffffff',
-      qCardBg: 'rgba(28, 19, 14, 0.90)',
-      qCardBorder: 'rgba(251, 146, 60, 0.70)',
-      qText: '#fff7ed',
-      optBg: 'rgba(46, 30, 22, 0.92)',
-      optBorder: 'rgba(253, 186, 116, 0.32)',
-      optText: '#ffedd5',
+      qCardBg: '#231209',
+      qCardBorder: '#fb923c',
+      qText: '#ffffff',
+      optBg: '#361e12',
+      optBorder: 'rgba(253, 186, 116, 0.50)',
+      optText: '#ffffff',
       optBadgeBg: '#ea580c',
       optBadgeText: '#ffffff',
-      watermark: 'rgba(254, 215, 170, 0.72)'
+      watermark: '#ffedd5'
     },
     emerald: {
       name: 'Emerald Night',
-      bgTop: '#031917',
-      bgMid: '#072e2a',
-      bgBot: '#041413',
-      glow1: 'rgba(16, 185, 129, 0.25)',
-      glow2: 'rgba(56, 189, 248, 0.18)',
-      headerBg: 'rgba(16, 185, 129, 0.15)',
-      headerBorder: 'rgba(52, 211, 153, 0.50)',
+      bgTop: '#031d1a',
+      bgMid: '#0a3f38',
+      bgBot: '#041715',
+      glow1: 'rgba(16, 185, 129, 0.40)',
+      glow2: 'rgba(56, 189, 248, 0.26)',
+      headerBg: 'rgba(16, 185, 129, 0.22)',
+      headerBorder: '#34d399',
       headerText: '#a7f3d0',
-      timerTrack: 'rgba(255, 255, 255, 0.15)',
+      timerTrack: 'rgba(255, 255, 255, 0.18)',
       timerRing: '#38bdf8',
       timerUrgent: '#f43f5e',
       timerDone: '#22c55e',
       timerText: '#ffffff',
-      qCardBg: 'rgba(6, 32, 30, 0.90)',
-      qCardBorder: 'rgba(52, 211, 153, 0.65)',
-      qText: '#ecfdf5',
-      optBg: 'rgba(11, 48, 44, 0.92)',
-      optBorder: 'rgba(110, 231, 183, 0.30)',
-      optText: '#f0fdfa',
+      qCardBg: '#062622',
+      qCardBorder: '#34d399',
+      qText: '#ffffff',
+      optBg: '#0d3b35',
+      optBorder: 'rgba(110, 231, 183, 0.48)',
+      optText: '#ffffff',
       optBadgeBg: '#0284c7',
       optBadgeText: '#ffffff',
-      watermark: 'rgba(167, 243, 208, 0.72)'
+      watermark: '#d1fae5'
     },
     light: {
       name: 'Classic Light Blue',
-      bgTop: '#f1f5f9',
-      bgMid: '#e2e8f0',
-      bgBot: '#cbd5e1',
-      glow1: 'rgba(59, 130, 246, 0.16)',
-      glow2: 'rgba(99, 102, 241, 0.14)',
-      headerBg: 'rgba(30, 64, 175, 0.10)',
-      headerBorder: 'rgba(30, 64, 175, 0.35)',
+      bgTop: '#f8fafc',
+      bgMid: '#e0edff',
+      bgBot: '#c7dcf8',
+      glow1: 'rgba(37, 99, 235, 0.20)',
+      glow2: 'rgba(99, 102, 241, 0.18)',
+      headerBg: 'rgba(30, 64, 175, 0.14)',
+      headerBorder: '#1d4ed8',
       headerText: '#1e3a8a',
-      timerTrack: 'rgba(15, 23, 42, 0.12)',
+      timerTrack: 'rgba(15, 23, 42, 0.16)',
       timerRing: '#2563eb',
       timerUrgent: '#dc2626',
       timerDone: '#16a34a',
       timerText: '#0f172a',
       qCardBg: '#ffffff',
-      qCardBorder: '#2563eb',
+      qCardBorder: '#1d4ed8',
       qText: '#0f172a',
       optBg: '#ffffff',
-      optBorder: '#cbd5e1',
-      optText: '#1e293b',
-      optBadgeBg: '#2563eb',
+      optBorder: '#94a3b8',
+      optText: '#0f172a',
+      optBadgeBg: '#1d4ed8',
       optBadgeText: '#ffffff',
-      watermark: 'rgba(30, 41, 59, 0.68)'
+      watermark: '#1e293b'
     }
   };
 
@@ -1782,7 +1782,7 @@ Ans: C"></textarea>
   // App State
   let questions = [];
   let settings = {
-    timerSec: 10,
+    timerSec: 5,
     revealSec: 2.5,
     theme: 'royal',
     videoFormat: 'portrait',
@@ -1797,7 +1797,7 @@ Ans: C"></textarea>
     ttsOutro: true,
     ttsVoiceName: '',
     ttsRate: 0.95,
-    voiceTiming: 'after_voice',
+    voiceTiming: 'with_voice',
     micCapture: false
   };
 
@@ -2003,6 +2003,7 @@ Ans: C"></textarea>
     try {
       const savedQ =
         localStorage.getItem(STORAGE_KEY) ||
+        localStorage.getItem('md_quiz_reel_questions_v10') ||
         localStorage.getItem('md_quiz_reel_questions_v9') ||
         localStorage.getItem('md_quiz_reel_questions_v8') ||
         localStorage.getItem('md_quiz_reel_questions_v7') ||
@@ -2021,6 +2022,7 @@ Ans: C"></textarea>
       }
       const savedS =
         localStorage.getItem(SETTINGS_KEY) ||
+        localStorage.getItem('md_quiz_reel_settings_v10') ||
         localStorage.getItem('md_quiz_reel_settings_v9') ||
         localStorage.getItem('md_quiz_reel_settings_v8') ||
         localStorage.getItem('md_quiz_reel_settings_v7') ||
@@ -3377,12 +3379,12 @@ Ans: C"></textarea>
       state.questionObj.question,
       qBoxW - qPadX * 2,
       qBoxH - qPadY * 2,
-      56 * S,
-      30 * S,
-      '800'
+      64 * S,
+      34 * S,
+      '900'
     );
 
-    ctx.font = `800 ${qTextFit.size}px "Noto Sans Devanagari", "Poppins", sans-serif`;
+    ctx.font = `900 ${qTextFit.size}px "Noto Sans Devanagari", "Poppins", sans-serif`;
     ctx.fillStyle = theme.qText;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -3538,12 +3540,12 @@ Ans: C"></textarea>
         state.questionObj.options[i] || '',
         textMaxW,
         optH - 34 * S,
-        44 * S,
-        24 * S,
-        highlightGreen ? '800' : '700'
+        48 * S,
+        26 * S,
+        highlightGreen ? '900' : '800'
       );
 
-      ctx.font = `${highlightGreen ? '800' : '700'} ${optFit.size}px "Noto Sans Devanagari", "Poppins", sans-serif`;
+      ctx.font = `${highlightGreen ? '900' : '800'} ${optFit.size}px "Noto Sans Devanagari", "Poppins", sans-serif`;
       ctx.fillStyle = highlightGreen ? '#ffffff' : theme.optText;
       ctx.textAlign = 'left';
       ctx.textBaseline = 'middle';
@@ -3919,12 +3921,12 @@ Ans: C"></textarea>
       state.questionObj.question,
       qBoxW - qPadX * 2,
       qBoxH - qPadY * 2,
-      54 * S,
-      30 * S,
-      '800'
+      64 * S,
+      34 * S,
+      '900'
     );
 
-    ctx.font = `800 ${qTextFit.size}px "Noto Sans Devanagari", "Poppins", sans-serif`;
+    ctx.font = `900 ${qTextFit.size}px "Noto Sans Devanagari", "Poppins", sans-serif`;
     ctx.fillStyle = theme.qText;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -4005,12 +4007,12 @@ Ans: C"></textarea>
         state.questionObj.options[i] || '',
         textMaxW,
         optH - 34 * S,
-        42 * S,
-        24 * S,
-        highlightGreen ? '800' : '700'
+        48 * S,
+        26 * S,
+        highlightGreen ? '900' : '800'
       );
 
-      ctx.font = `${highlightGreen ? '800' : '700'} ${optFit.size}px "Noto Sans Devanagari", "Poppins", sans-serif`;
+      ctx.font = `${highlightGreen ? '900' : '800'} ${optFit.size}px "Noto Sans Devanagari", "Poppins", sans-serif`;
       ctx.fillStyle = highlightGreen ? '#ffffff' : theme.optText;
       ctx.textAlign = 'left';
       ctx.textBaseline = 'middle';
@@ -4511,13 +4513,13 @@ Ans: C"></textarea>
         phase: 'outro',
         displaySec: 0,
         outroProgress: Math.min(1, outroT / Math.max(0.2, seg.duration)),
-        outroFade: Math.min(1, outroT / 0.35)
+        outroFade: 1
       };
     }
 
     const qObj = seg.questionObj;
     const qIdx = seg.qIndex;
-    const fadeIn = Math.min(1, (elapsedSec - seg.start) / 0.22);
+    const fadeIn = 1; // v11: No dark/faded first frame for crisp Instagram cover!
 
     if (elapsedSec < seg.leadInEnd) {
       return {
@@ -4585,7 +4587,7 @@ Ans: C"></textarea>
     }
 
     const transT = elapsedSec - seg.revealEnd;
-    const fadeOut = Math.max(0, 1 - transT / TRANSITION_SEC);
+    const fadeOut = 1; // v11: Keep crisp bright frames between questions
     return {
       done: false,
       progressPct: (elapsedSec / totalDuration) * 100,
@@ -5908,7 +5910,7 @@ Ans: C"></textarea>
         showToast('एक्सपोर्ट करने के लिए कोई प्रश्न नहीं है।');
         return;
       }
-      const payload = JSON.stringify({ app: 'MD Quiz Reel Maker', version: 10, questions, settings }, null, 2);
+      const payload = JSON.stringify({ app: 'MD Quiz Reel Maker', version: 11, questions, settings }, null, 2);
       const blob = new Blob([payload], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
