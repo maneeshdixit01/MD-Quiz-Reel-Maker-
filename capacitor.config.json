@@ -1,9 +1,0 @@
-{
-  "appId": "com.md.quizreelmaker",
-  "appName": "MD Quiz Reel Maker",
-  "webDir": "www",
-  "bundledWebRuntime": false,
-  "android": {
-    "allowMixedContent": true
-  }
-}
