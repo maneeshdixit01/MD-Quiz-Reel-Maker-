@@ -37,6 +37,19 @@ jobs:
           fi
           npx cap sync android
 
+      - name: Add Google Maven Central Mirror
+        run: |
+          python3 - <<'PY'
+          path = "android/build.gradle"
+          with open(path, "r", encoding="utf-8") as f:
+              text = f.read()
+          mirror = 'maven { url "https://maven-central.storage-download.googleapis.com/maven2/" }\n        mavenCentral()'
+          if "maven-central.storage-download.googleapis.com" not in text:
+              text = text.replace("mavenCentral()", mirror)
+              with open(path, "w", encoding="utf-8") as f:
+                  f.write(text)
+          PY
+
       - name: Install Native Android Hindi TTS Plugin
         run: |
           JAVA_DIR="android/app/src/main/java/com/md/quizreelmaker"
@@ -83,7 +96,7 @@ jobs:
         working-directory: android
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug
+          ./gradlew assembleDebug --refresh-dependencies || ./gradlew assembleDebug
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
