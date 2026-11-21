@@ -1,9 +1,0 @@
-{
-  "name": "MD Quiz Reel Maker",
-  "short_name": "Quiz Video",
-  "start_url": "./index.html",
-  "display": "standalone",
-  "background_color": "#0b1120",
-  "theme_color": "#0f172a",
-  "orientation": "any"
-}
