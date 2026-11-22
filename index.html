@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <meta name="theme-color" content="#0f172a" />
-  <title>MD Quiz Reel Maker v11 — Bright Cover + High-Contrast Reels &amp; YouTube MP4</title>
+  <title>MD Quiz Reel Maker v13 — Persistent Topic Banner (Layout A) + Smart Voice-Sync MP4</title>
   <link rel="manifest" href="manifest.webmanifest" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -1128,7 +1128,7 @@
       <div class="brand">
         <div class="brand-icon">▶</div>
         <div>
-          <h1>MD Quiz Reel Maker v11</h1>
+          <h1>MD Quiz Reel Maker v13</h1>
           <p>Reels/Shorts (9:16) और YouTube (16:9) के लिए Manual, PDF व Hindi Voice MP4 मेकर</p>
         </div>
       </div>
@@ -1382,6 +1382,12 @@
           <input type="text" id="settingBrand" placeholder="जैसे: सामान्य ज्ञान और समसामयिकी" maxlength="45" />
         </div>
 
+        <div class="form-group" style="margin-top: 8px;">
+          <label for="settingTopic">📌 वीडियो का टॉपिक (पूरी वीडियो में ऊपर लिखा रहेगा — वैकल्पिक)</label>
+          <input type="text" id="settingTopic" placeholder="जैसे: भूगोल के महत्वपूर्ण प्रश्न" maxlength="70" />
+          <div class="hint">यह टॉपिक पहले प्रश्न से अंतिम स्लाइड तक पूरी वीडियो में (Layout A: बाएँ टॉपिक + दाएँ छोटा टाइमर) लगातार दिखेगा। खाली छोड़ने पर नहीं दिखेगा।</div>
+        </div>
+
         <div class="form-group" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);">
           <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:6px;">
             <label for="settingOutroText" style="margin-bottom:0;">📢 वीडियो के अंत का संदेश (Outro / End Message — वैकल्पिक)</label>
@@ -1441,9 +1447,10 @@
               <label for="settingTtsRate">बोलने की गति (Speed)</label>
               <select id="settingTtsRate">
                 <option value="0.85">धीमी (0.85x)</option>
-                <option value="0.95" selected>सामान्य हिंदी (0.95x)</option>
+                <option value="0.95">सामान्य हिंदी (0.95x)</option>
                 <option value="1.05">हल्की तेज़ (1.05x)</option>
-                <option value="1.18">तेज़ (1.18x)</option>
+                <option value="1.18" selected>तेज़ (1.18x — Reels बेस्ट)</option>
+                <option value="1.3">बहुत तेज़ (1.30x)</option>
               </select>
             </div>
           </div>
@@ -1466,7 +1473,7 @@
             <input type="checkbox" id="settingMicCapture" class="switch" />
           </div>
           <div class="hint" id="ttsModeHint">
-            💡 <b>v11 ऑटो हिंदी TTS (APK):</b> Android APK के अंदर कंप्यूटर की हिंदी आवाज़ (प्रश्न, सही उत्तर व अंतिम संदेश) <b>बिना माइक के सीधे MP4 वीडियो में साफ जुड़ती है</b>। यदि आपने किसी प्रश्न पर अपनी खुद की आवाज़ रिकॉर्ड की है, तो उस प्रश्न पर आपकी रिकॉर्ड आवाज़ चलेगी।
+            💡 <b>v13 स्मार्ट वॉइस-सिंक (APK):</b> Android APK के अंदर कंप्यूटर की हिंदी आवाज़ (प्रश्न, सही उत्तर व अंतिम संदेश) <b>बिना माइक के सीधे MP4 वीडियो में साफ जुड़ती है</b>। यदि आपने किसी प्रश्न पर अपनी खुद की आवाज़ रिकॉर्ड की है, तो उस प्रश्न पर आपकी रिकॉर्ड आवाज़ चलेगी।
           </div>
         </div>
 
@@ -1535,7 +1542,7 @@
             <button type="button" class="btn btn-warning" style="flex:1;" id="btnShareVideo">📤 शेयर करें</button>
           </div>
           <div class="hint" id="savePathHint" style="margin-top:8px;">
-            💡 v11 ऑटो MP4 फिक्सर: सेव होते ही वीडियो की पूरी लंबाई (Full Duration) गैलरी (Movies/MD_Quiz_Videos) में दिखेगी और यह सीधे Instagram, Facebook व YouTube पर अपलोड होगा।
+            💡 v13 ऑटो MP4 फिक्सर: सेव होते ही वीडियो की पूरी लंबाई (Full Duration) गैलरी (Movies/MD_Quiz_Videos) में दिखेगी और यह सीधे Instagram, Facebook व YouTube पर अपलोड होगा।
           </div>
         </div>
       </div>
@@ -1588,8 +1595,8 @@ Ans: C"></textarea>
 (() => {
   'use strict';
 
-  const STORAGE_KEY = 'md_quiz_reel_questions_v11';
-  const SETTINGS_KEY = 'md_quiz_reel_settings_v11';
+  const STORAGE_KEY = 'md_quiz_reel_questions_v13';
+  const SETTINGS_KEY = 'md_quiz_reel_settings_v13';
   const VOICE_DB_NAME = 'MDQuizReelVoices_v6';
   const LETTERS = ['A', 'B', 'C', 'D'];
   const TRANSITION_SEC = 0.25;
@@ -1679,7 +1686,11 @@ Ans: C"></textarea>
       optText: '#ffffff',
       optBadgeBg: '#4f46e5',
       optBadgeText: '#ffffff',
-      watermark: '#e2e8f0'
+      watermark: '#e2e8f0',
+      topicBg1: '#4f46e5',
+      topicBg2: '#6366f1',
+      topicBorder: '#fbbf24',
+      topicText: '#ffffff'
     },
     saffron: {
       name: 'Saffron & Slate',
@@ -1704,7 +1715,11 @@ Ans: C"></textarea>
       optText: '#ffffff',
       optBadgeBg: '#ea580c',
       optBadgeText: '#ffffff',
-      watermark: '#ffedd5'
+      watermark: '#ffedd5',
+      topicBg1: '#ea580c',
+      topicBg2: '#d97706',
+      topicBorder: '#fef08a',
+      topicText: '#ffffff'
     },
     emerald: {
       name: 'Emerald Night',
@@ -1729,7 +1744,11 @@ Ans: C"></textarea>
       optText: '#ffffff',
       optBadgeBg: '#0284c7',
       optBadgeText: '#ffffff',
-      watermark: '#d1fae5'
+      watermark: '#d1fae5',
+      topicBg1: '#059669',
+      topicBg2: '#0284c7',
+      topicBorder: '#a7f3d0',
+      topicText: '#ffffff'
     },
     light: {
       name: 'Classic Light Blue',
@@ -1754,7 +1773,11 @@ Ans: C"></textarea>
       optText: '#0f172a',
       optBadgeBg: '#1d4ed8',
       optBadgeText: '#ffffff',
-      watermark: '#1e293b'
+      watermark: '#1e293b',
+      topicBg1: '#2563eb',
+      topicBg2: '#4f46e5',
+      topicBorder: '#1d4ed8',
+      topicText: '#ffffff'
     }
   };
 
@@ -1788,6 +1811,7 @@ Ans: C"></textarea>
     videoFormat: 'portrait',
     quality: 1080,
     brand: '',
+    topic: '',
     outroText: '',
     outroSec: 3,
     sound: true,
@@ -1796,7 +1820,7 @@ Ans: C"></textarea>
     ttsAnswer: true,
     ttsOutro: true,
     ttsVoiceName: '',
-    ttsRate: 0.95,
+    ttsRate: 1.18,
     voiceTiming: 'with_voice',
     micCapture: false
   };
@@ -1904,6 +1928,7 @@ Ans: C"></textarea>
       settingQuality: document.getElementById('settingQuality'),
       previewCardTitle: document.getElementById('previewCardTitle'),
       settingBrand: document.getElementById('settingBrand'),
+      settingTopic: document.getElementById('settingTopic'),
       settingOutroText: document.getElementById('settingOutroText'),
       settingOutroSec: document.getElementById('settingOutroSec'),
       btnPreviewOutro: document.getElementById('btnPreviewOutro'),
@@ -2003,6 +2028,8 @@ Ans: C"></textarea>
     try {
       const savedQ =
         localStorage.getItem(STORAGE_KEY) ||
+        localStorage.getItem('md_quiz_reel_questions_v12') ||
+        localStorage.getItem('md_quiz_reel_questions_v11') ||
         localStorage.getItem('md_quiz_reel_questions_v10') ||
         localStorage.getItem('md_quiz_reel_questions_v9') ||
         localStorage.getItem('md_quiz_reel_questions_v8') ||
@@ -2022,6 +2049,8 @@ Ans: C"></textarea>
       }
       const savedS =
         localStorage.getItem(SETTINGS_KEY) ||
+        localStorage.getItem('md_quiz_reel_settings_v12') ||
+        localStorage.getItem('md_quiz_reel_settings_v11') ||
         localStorage.getItem('md_quiz_reel_settings_v10') ||
         localStorage.getItem('md_quiz_reel_settings_v9') ||
         localStorage.getItem('md_quiz_reel_settings_v8') ||
@@ -2082,6 +2111,7 @@ Ans: C"></textarea>
     el.settingFormat.value = isLandscapeFormat() ? 'landscape' : 'portrait';
     el.settingQuality.value = String(settings.quality);
     el.settingBrand.value = settings.brand || '';
+    if (el.settingTopic) el.settingTopic.value = settings.topic || '';
     el.settingOutroText.value = settings.outroText || '';
     el.settingOutroSec.value = String(settings.outroSec || 3);
     el.settingTtsEnabled.checked = Boolean(settings.ttsEnabled);
@@ -2612,20 +2642,31 @@ Ans: C"></textarea>
   }
 
   // ==================== TIMELINE PLANNER (VOICE + COUNTDOWN + REVEAL + OUTRO) ====================
-  function getQuestionLeadInSec(q, exactDurMap) {
-    if (settings.voiceTiming !== 'after_voice') return 0;
+  function getQuestionSpeechSec(q, exactDurMap) {
     const rec = voiceCache.get(q.id);
     if (rec && rec.duration > 0.2) {
-      return Math.min(25, Math.max(0.6, rec.duration + 0.35));
+      return Math.min(25, Math.max(0.6, rec.duration + 0.25));
     }
     if (exactDurMap && exactDurMap.has('q_' + q.id)) {
       const exactQ = exactDurMap.get('q_' + q.id);
-      if (exactQ > 0.2) return Math.min(25, Math.max(0.8, exactQ + 0.35));
+      if (exactQ > 0.2) return Math.min(25, Math.max(0.7, exactQ + 0.25));
     }
     if (settings.ttsEnabled && settings.ttsQuestion) {
       return estimateHindiTtsSeconds(q.question);
     }
     return 0;
+  }
+
+  function getQuestionLeadInSec(q, exactDurMap, timerSec) {
+    const speechSec = getQuestionSpeechSec(q, exactDurMap);
+    if (!speechSec) return 0;
+    if (settings.voiceTiming === 'after_voice') {
+      return speechSec;
+    }
+    // Smart Guard in 'with_voice' mode: if question speech is longer than timerSec,
+    // give the extra seconds BEFORE timer counts down so the full question is spoken cleanly!
+    const safeTimer = Number(timerSec) || 5;
+    return Math.max(0, speechSec - safeTimer + 0.2);
   }
 
   function buildTimelinePlan(exactDurMap = null) {
@@ -2636,7 +2677,7 @@ Ans: C"></textarea>
 
     for (let i = 0; i < questions.length; i++) {
       const q = questions[i];
-      const leadInSec = getQuestionLeadInSec(q, exactDurMap);
+      const leadInSec = getQuestionLeadInSec(q, exactDurMap, timerSec);
       let revealSec = baseRevealSec;
       if (exactDurMap && exactDurMap.has('ans_' + q.id)) {
         revealSec = Math.max(baseRevealSec, Math.min(8.0, exactDurMap.get('ans_' + q.id) + 0.45));
@@ -3295,6 +3336,47 @@ Ans: C"></textarea>
     return { size: minFontPx, lineHeight: minFontPx * 1.34, lines };
   }
 
+  function drawTopicBanner(context, x, y, w, h, text, theme, S, radiusPx = 28) {
+    if (!text) return;
+    context.save();
+    drawRoundedRect(context, x, y, w, h, radiusPx * S);
+    const tGrad = context.createLinearGradient(x, y, x + w, y + h);
+    tGrad.addColorStop(0, theme.topicBg1 || '#2563eb');
+    tGrad.addColorStop(1, theme.topicBg2 || '#4f46e5');
+    context.fillStyle = tGrad;
+    context.shadowColor = 'rgba(0, 0, 0, 0.28)';
+    context.shadowBlur = 18 * S;
+    context.shadowOffsetY = 6 * S;
+    context.fill();
+
+    context.shadowBlur = 0;
+    context.shadowOffsetY = 0;
+    context.lineWidth = 3 * S;
+    context.strokeStyle = theme.topicBorder || theme.headerBorder;
+    context.stroke();
+
+    const fit = fitTextLines(
+      context,
+      text,
+      w - 44 * S,
+      h - 20 * S,
+      38 * S,
+      20 * S,
+      '800'
+    );
+    context.font = `800 ${fit.size}px "Noto Sans Devanagari", "Poppins", sans-serif`;
+    context.fillStyle = theme.topicText || '#ffffff';
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    const totalH = fit.lines.length * fit.lineHeight;
+    let curY = y + (h - totalH) / 2 + fit.lineHeight / 2;
+    for (const line of fit.lines) {
+      context.fillText(line, x + w / 2, curY);
+      curY += fit.lineHeight;
+    }
+    context.restore();
+  }
+
   function drawReelFrameLandscape(state) {
     if (!ctx || !el.canvas) return;
     const W = el.canvas.width;
@@ -3345,11 +3427,22 @@ Ans: C"></textarea>
 
     const brandText = (settings.brand || '').trim();
     if (brandText) {
-      ctx.font = `700 ${30 * S}px "Noto Sans Devanagari", "Poppins", sans-serif`;
+      ctx.font = `700 ${28 * S}px "Noto Sans Devanagari", "Poppins", sans-serif`;
       ctx.fillStyle = theme.watermark;
       ctx.textAlign = 'right';
       ctx.textBaseline = 'middle';
-      ctx.fillText(brandText, W - 68 * S, topY + pillH / 2 + 2 * S);
+      ctx.fillText(brandText, W - 68 * S, topY + pillH / 2 + 2 * S, 420 * S);
+    }
+
+    const topicText = (settings.topic || '').trim();
+    if (topicText) {
+      const topicLeft = pillX + pillW + 28 * S;
+      const topicRight = brandText ? (W - 68 * S - 440 * S) : (W - 68 * S);
+      const availW = Math.max(420 * S, topicRight - topicLeft);
+      const tW = Math.min(920 * S, availW);
+      const tX = brandText ? (topicLeft + (availW - tW) / 2) : ((W - tW) / 2);
+      const tH = 60 * S;
+      drawTopicBanner(ctx, tX, topY - 2 * S, tW, tH, topicText, theme, S, 30);
     }
 
     // 3. Upper Row: Large Question Card (Left) + Circular Countdown Timer (Right)
@@ -3620,11 +3713,18 @@ Ans: C"></textarea>
     ctx.save();
     ctx.globalAlpha = Math.max(0, Math.min(1, fadeAlpha));
 
+    const topicText = (settings.topic || '').trim();
+    if (topicText) {
+      const tW = 1040 * S;
+      const tH = 66 * S;
+      drawTopicBanner(ctx, (W - tW) / 2, 28 * S, tW, tH, topicText, theme, S, 33);
+    }
+
     // 2. Top Animated Bell Badge
     const iconCX = W / 2;
-    const iconCY = 148 * S;
+    const iconCY = topicText ? 176 * S : 148 * S;
     const pulse = 1 + Math.sin(outroProgress * Math.PI * 4) * 0.05;
-    const iconR = 82 * S * pulse;
+    const iconR = (topicText ? 64 : 82) * S * pulse;
 
     ctx.save();
     ctx.beginPath();
@@ -3646,7 +3746,7 @@ Ans: C"></textarea>
     ctx.stroke();
     ctx.restore();
 
-    ctx.font = `900 ${70 * S}px "Noto Sans Devanagari", "Poppins", sans-serif`;
+    ctx.font = `900 ${(topicText ? 54 : 70) * S}px "Noto Sans Devanagari", "Poppins", sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#ffffff';
@@ -3656,26 +3756,26 @@ Ans: C"></textarea>
     const brandText = (settings.brand || '').trim();
     if (brandText) {
       const bW = Math.min(W - 360 * S, Math.max(460 * S, brandText.length * 26 * S + 110 * S));
-      const bH = 68 * S;
+      const bH = (topicText ? 58 : 68) * S;
       const bX = (W - bW) / 2;
-      const bY = 262 * S;
-      drawRoundedRect(ctx, bX, bY, bW, bH, 34 * S);
+      const bY = (topicText ? 264 : 262) * S;
+      drawRoundedRect(ctx, bX, bY, bW, bH, (bH / 2));
       ctx.fillStyle = theme.headerBg;
       ctx.fill();
       ctx.lineWidth = 3 * S;
       ctx.strokeStyle = theme.headerBorder;
       ctx.stroke();
 
-      ctx.font = `800 ${34 * S}px "Noto Sans Devanagari", "Poppins", sans-serif`;
+      ctx.font = `800 ${(topicText ? 30 : 34) * S}px "Noto Sans Devanagari", "Poppins", sans-serif`;
       ctx.fillStyle = theme.headerText;
       ctx.fillText(brandText, W / 2, bY + bH / 2 + 2 * S);
     }
 
     // 4. Wide Message Card
     const cardX = 160 * S;
-    const cardY = brandText ? 360 * S : 284 * S;
+    const cardY = brandText ? (topicText ? 344 : 360) * S : (topicText ? 276 : 284) * S;
     const cardW = W - 320 * S;
-    const cardH = 380 * S;
+    const cardH = (topicText ? 364 : 380) * S;
 
     ctx.save();
     drawRoundedRect(ctx, cardX, cardY, cardW, cardH, 36 * S);
@@ -3797,19 +3897,19 @@ Ans: C"></textarea>
     ctx.save();
     ctx.globalAlpha = Math.max(0, Math.min(1, state.fadeAlpha ?? 1));
 
-    // 2. Top Bar
-    const topY = 82 * S;
-    const pillW = 240 * S;
-    const pillH = 62 * S;
-    const pillX = 68 * S;
-    drawRoundedRect(ctx, pillX, topY, pillW, pillH, 31 * S);
+    // 2. Top Bar (Q Pill Left + Page Name Right)
+    const topY = 74 * S;
+    const pillW = 236 * S;
+    const pillH = 58 * S;
+    const pillX = 64 * S;
+    drawRoundedRect(ctx, pillX, topY, pillW, pillH, 29 * S);
     ctx.fillStyle = theme.headerBg;
     ctx.fill();
     ctx.lineWidth = 2.5 * S;
     ctx.strokeStyle = theme.headerBorder;
     ctx.stroke();
 
-    ctx.font = `800 ${30 * S}px "Noto Sans Devanagari", "Poppins", sans-serif`;
+    ctx.font = `800 ${28 * S}px "Noto Sans Devanagari", "Poppins", sans-serif`;
     ctx.fillStyle = theme.headerText;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
@@ -3817,17 +3917,28 @@ Ans: C"></textarea>
 
     const brandText = (settings.brand || '').trim();
     if (brandText) {
-      ctx.font = `700 ${28 * S}px "Noto Sans Devanagari", "Poppins", sans-serif`;
+      ctx.font = `700 ${27 * S}px "Noto Sans Devanagari", "Poppins", sans-serif`;
       ctx.fillStyle = theme.watermark;
       ctx.textAlign = 'right';
       ctx.textBaseline = 'middle';
-      ctx.fillText(brandText, W - 68 * S, topY + pillH / 2 + 2 * S);
+      ctx.fillText(brandText, W - 64 * S, topY + pillH / 2 + 2 * S, 640 * S);
     }
 
-    // 3. Top Countdown Timer (10 -> 0)
-    const timerCX = W / 2;
-    const timerCY = 300 * S;
-    const timerR = 112 * S;
+    // 3. Layout A Row: Topic Banner (Left) + Small Compact Timer (Right)
+    const topicText = (settings.topic || '').trim();
+    const row2CY = 250 * S;
+    const timerR = topicText ? 76 * S : 84 * S;
+    const timerCX = topicText ? (W - 64 * S - timerR) : (W / 2);
+    const timerCY = row2CY;
+
+    if (topicText) {
+      const topicX = 64 * S;
+      const topicW = (timerCX - timerR - 28 * S) - topicX;
+      const topicH = 128 * S;
+      const topicY = row2CY - topicH / 2;
+      drawTopicBanner(ctx, topicX, topicY, topicW, topicH, topicText, theme, S, 28);
+    }
+
     const progress = state.isRevealed
       ? 0
       : Math.max(0, Math.min(1, state.remainingSec / Math.max(1, state.timerTotal)));
@@ -3837,20 +3948,20 @@ Ans: C"></textarea>
     let pulseR = timerR;
     if (isUrgent) {
       const frac = state.remainingSec % 1;
-      pulseR = timerR + Math.sin(frac * Math.PI) * 9 * S;
+      pulseR = timerR + Math.sin(frac * Math.PI) * 7 * S;
     } else if (state.isRevealed) {
-      pulseR = timerR + Math.sin(Math.min(1, state.revealProgress * 3) * Math.PI) * 8 * S;
+      pulseR = timerR + Math.sin(Math.min(1, state.revealProgress * 3) * Math.PI) * 6 * S;
     }
 
     ctx.save();
     ctx.beginPath();
     ctx.arc(timerCX, timerCY, pulseR, 0, Math.PI * 2);
-    ctx.fillStyle = state.isRevealed ? 'rgba(22, 163, 74, 0.22)' : 'rgba(15, 23, 42, 0.55)';
+    ctx.fillStyle = state.isRevealed ? 'rgba(22, 163, 74, 0.24)' : 'rgba(15, 23, 42, 0.58)';
     ctx.fill();
 
     ctx.beginPath();
     ctx.arc(timerCX, timerCY, pulseR, 0, Math.PI * 2);
-    ctx.lineWidth = 18 * S;
+    ctx.lineWidth = 14 * S;
     ctx.strokeStyle = theme.timerTrack;
     ctx.stroke();
 
@@ -3860,7 +3971,7 @@ Ans: C"></textarea>
       ? startAngle + Math.PI * 2
       : startAngle + Math.PI * 2 * progress;
     ctx.arc(timerCX, timerCY, pulseR, startAngle, endAngle, false);
-    ctx.lineWidth = 18 * S;
+    ctx.lineWidth = 14 * S;
     ctx.lineCap = 'round';
     ctx.strokeStyle = state.isRevealed
       ? theme.timerDone
@@ -3868,37 +3979,37 @@ Ans: C"></textarea>
       ? theme.timerUrgent
       : theme.timerRing;
     ctx.shadowColor = ctx.strokeStyle;
-    ctx.shadowBlur = 22 * S;
+    ctx.shadowBlur = 18 * S;
     ctx.stroke();
     ctx.restore();
 
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     if (state.isRevealed) {
-      ctx.font = `900 ${78 * S}px "Poppins", "Noto Sans Devanagari", sans-serif`;
+      ctx.font = `900 ${54 * S}px "Poppins", "Noto Sans Devanagari", sans-serif`;
       ctx.fillStyle = '#4ade80';
-      ctx.fillText('0', timerCX, timerCY - 12 * S);
-      ctx.font = `800 ${24 * S}px "Noto Sans Devanagari", sans-serif`;
+      ctx.fillText('0', timerCX, timerCY - 11 * S);
+      ctx.font = `800 ${20 * S}px "Noto Sans Devanagari", sans-serif`;
       ctx.fillStyle = '#bbf7d0';
-      ctx.fillText('सही उत्तर ✓', timerCX, timerCY + 46 * S);
+      ctx.fillText('सही ✓', timerCX, timerCY + 32 * S);
     } else if (state.isVoiceLeadIn) {
-      ctx.font = `900 ${74 * S}px "Poppins", "Noto Sans Devanagari", sans-serif`;
+      ctx.font = `900 ${50 * S}px "Poppins", "Noto Sans Devanagari", sans-serif`;
       ctx.fillStyle = theme.timerText;
-      ctx.fillText(String(state.timerTotal), timerCX, timerCY - 14 * S);
-      ctx.font = `800 ${22 * S}px "Noto Sans Devanagari", sans-serif`;
+      ctx.fillText(String(state.timerTotal), timerCX, timerCY - 12 * S);
+      ctx.font = `800 ${19 * S}px "Noto Sans Devanagari", sans-serif`;
       ctx.fillStyle = theme.headerText;
-      ctx.fillText('🔊 प्रश्न सुनें', timerCX, timerCY + 46 * S);
+      ctx.fillText('🔊 सुनें', timerCX, timerCY + 32 * S);
     } else {
-      ctx.font = `900 ${96 * S}px "Poppins", "Noto Sans Devanagari", sans-serif`;
+      ctx.font = `900 ${70 * S}px "Poppins", "Noto Sans Devanagari", sans-serif`;
       ctx.fillStyle = isUrgent ? '#fca5a5' : theme.timerText;
-      ctx.fillText(String(displayNum), timerCX, timerCY + 4 * S);
+      ctx.fillText(String(displayNum), timerCX, timerCY + 3 * S);
     }
 
-    // 4. Question Card
+    // 4. Question Card (shifted cleanly up into Instagram safe zone)
     const qBoxX = 64 * S;
-    const qBoxY = 470 * S;
+    const qBoxY = 374 * S;
     const qBoxW = W - 128 * S;
-    const qBoxH = 420 * S;
+    const qBoxH = 408 * S;
 
     ctx.save();
     drawRoundedRect(ctx, qBoxX, qBoxY, qBoxW, qBoxH, 34 * S);
@@ -3938,9 +4049,9 @@ Ans: C"></textarea>
     }
 
     // 5. Four Options
-    const optsTop = 945 * S;
+    const optsTop = 832 * S;
     const optH = 172 * S;
-    const optGap = 32 * S;
+    const optGap = 30 * S;
     const optX = 64 * S;
     const optW = W - 128 * S;
 
@@ -4043,7 +4154,7 @@ Ans: C"></textarea>
     }
 
     // 6. Bottom Footer CTA
-    const footerY = 1810 * S;
+    const footerY = 1692 * S;
     ctx.font = `700 ${30 * S}px "Noto Sans Devanagari", "Poppins", sans-serif`;
     ctx.fillStyle = theme.watermark;
     ctx.textAlign = 'center';
@@ -4093,15 +4204,20 @@ Ans: C"></textarea>
     ctx.save();
     ctx.globalAlpha = Math.max(0, Math.min(1, fadeAlpha));
 
+    const topicText = (settings.topic || '').trim();
+    if (topicText) {
+      drawTopicBanner(ctx, 64 * S, 86 * S, W - 128 * S, 108 * S, topicText, theme, S, 28);
+    }
+
     // 2. Top Animated Glowing Circle Icon
     const iconCX = W / 2;
-    const iconCY = 370 * S;
+    const iconCY = topicText ? 344 * S : 370 * S;
     const pulse = 1 + Math.sin(outroProgress * Math.PI * 4) * 0.045;
-    const iconR = 128 * S * pulse;
+    const iconR = (topicText ? 104 : 128) * S * pulse;
 
     ctx.save();
     ctx.beginPath();
-    ctx.arc(iconCX, iconCY, iconR + 24 * S, 0, Math.PI * 2);
+    ctx.arc(iconCX, iconCY, iconR + 22 * S, 0, Math.PI * 2);
     ctx.fillStyle = theme.headerBg;
     ctx.fill();
 
@@ -4119,7 +4235,7 @@ Ans: C"></textarea>
     ctx.stroke();
     ctx.restore();
 
-    ctx.font = `900 ${106 * S}px "Noto Sans Devanagari", "Poppins", sans-serif`;
+    ctx.font = `900 ${(topicText ? 88 : 106) * S}px "Noto Sans Devanagari", "Poppins", sans-serif`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillStyle = '#ffffff';
@@ -4129,17 +4245,17 @@ Ans: C"></textarea>
     const brandText = (settings.brand || '').trim();
     if (brandText) {
       const bW = Math.min(W - 140 * S, Math.max(460 * S, brandText.length * 28 * S + 110 * S));
-      const bH = 82 * S;
+      const bH = 76 * S;
       const bX = (W - bW) / 2;
-      const bY = 555 * S;
-      drawRoundedRect(ctx, bX, bY, bW, bH, 41 * S);
+      const bY = topicText ? 496 * S : 555 * S;
+      drawRoundedRect(ctx, bX, bY, bW, bH, 38 * S);
       ctx.fillStyle = theme.headerBg;
       ctx.fill();
       ctx.lineWidth = 3 * S;
       ctx.strokeStyle = theme.headerBorder;
       ctx.stroke();
 
-      ctx.font = `800 ${36 * S}px "Noto Sans Devanagari", "Poppins", sans-serif`;
+      ctx.font = `800 ${34 * S}px "Noto Sans Devanagari", "Poppins", sans-serif`;
       ctx.fillStyle = theme.headerText;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
@@ -4148,9 +4264,9 @@ Ans: C"></textarea>
 
     // 4. Center Message Card
     const cardX = 72 * S;
-    const cardY = brandText ? 685 * S : 610 * S;
+    const cardY = brandText ? (topicText ? 610 : 685) * S : (topicText ? 520 : 610) * S;
     const cardW = W - 144 * S;
-    const cardH = 620 * S;
+    const cardH = (topicText ? 560 : 620) * S;
 
     ctx.save();
     drawRoundedRect(ctx, cardX, cardY, cardW, cardH, 40 * S);
@@ -4244,7 +4360,7 @@ Ans: C"></textarea>
     // Bottom Thank You note
     ctx.font = `700 ${30 * S}px "Noto Sans Devanagari", "Poppins", sans-serif`;
     ctx.fillStyle = theme.watermark;
-    ctx.fillText('वीडियो देखने के लिए धन्यवाद 🙏', W / 2, 1815 * S);
+    ctx.fillText('वीडियो देखने के लिए धन्यवाद 🙏', W / 2, (topicText ? 1680 : 1730) * S);
 
     ctx.restore();
   }
@@ -5910,7 +6026,7 @@ Ans: C"></textarea>
         showToast('एक्सपोर्ट करने के लिए कोई प्रश्न नहीं है।');
         return;
       }
-      const payload = JSON.stringify({ app: 'MD Quiz Reel Maker', version: 11, questions, settings }, null, 2);
+      const payload = JSON.stringify({ app: 'MD Quiz Reel Maker', version: 13, questions, settings }, null, 2);
       const blob = new Blob([payload], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
@@ -5984,6 +6100,7 @@ Ans: C"></textarea>
       settings.quality = el.settingQuality.value || '1080';
       syncFormatUI();
       settings.brand = el.settingBrand.value;
+      settings.topic = el.settingTopic ? el.settingTopic.value : '';
       settings.outroText = el.settingOutroText.value;
       settings.outroSec = Number(el.settingOutroSec.value) || 3;
       settings.ttsEnabled = el.settingTtsEnabled.checked;
@@ -6014,6 +6131,7 @@ Ans: C"></textarea>
       el.settingFormat,
       el.settingQuality,
       el.settingBrand,
+      el.settingTopic,
       el.settingOutroSec,
       el.settingTtsEnabled,
       el.settingTtsQuestion,

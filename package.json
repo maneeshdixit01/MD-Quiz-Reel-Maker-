@@ -1,7 +1,7 @@
 {
   "name": "md-quiz-reel-maker",
-  "version": "11.0.0",
-  "description": "Quiz Video Maker v11 (Bright No-Fade First Frame + Larger Fonts + 9:16/16:9 + Native Hindi TTS + Standard MP4 Gallery Remuxer)",
+  "version": "13.0.0",
+  "description": "Quiz Video Maker v13 (Layout A Persistent Topic Banner + Compact Timer + Smart Voice-Sync + 9:16/16:9 + Standard MP4 Gallery Remuxer)",
   "scripts": {
     "build": "node -e \"const fs=require('fs'); fs.mkdirSync('www',{recursive:true}); ['index.html','manifest.webmanifest'].forEach(f=>fs.copyFileSync(f,'www/'+f));\""
   },
