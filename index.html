@@ -1191,6 +1191,14 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
           const AC = window.AudioContext || window.webkitAudioContext;
           this.ctx = new AC();
           this.dest = this.ctx.createMediaStreamDestination();
+          try {
+            const carrier = this.ctx.createOscillator();
+            const carrierGain = this.ctx.createGain();
+            carrierGain.gain.value = 0.00001;
+            carrier.connect(carrierGain);
+            carrierGain.connect(this.dest);
+            carrier.start();
+          } catch (_) {}
         }
         if (this.ctx.state === 'suspended') this.ctx.resume();
       }
@@ -1381,30 +1389,103 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
           this.synth.speak(utter);
         });
       }
-      // For video recording: attempts CORS-friendly Indian Hindi audio buffer synthesis so it mixes into WebAudio
+      splitTextForTts(text, maxLen = 160) {
+        const clean = String(text || '').replace(/\s+/g, ' ').trim();
+        if (!clean) return [];
+        if (clean.length <= maxLen) return [clean];
+        const parts = clean.split(/(?<=[।.?!,])/);
+        const chunks = [];
+        let cur = '';
+        for (const part of parts) {
+          const p = part.trim();
+          if (!p) continue;
+          if ((cur + ' ' + p).trim().length <= maxLen) {
+            cur = (cur + ' ' + p).trim();
+          } else {
+            if (cur) chunks.push(cur);
+            cur = p.slice(0, maxLen);
+          }
+        }
+        if (cur) chunks.push(cur);
+        return chunks.length ? chunks : [clean.slice(0, maxLen)];
+      }
+
+      base64ToArrayBuffer(b64) {
+        const binStr = atob(b64);
+        const len = binStr.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+          bytes[i] = binStr.charCodeAt(i);
+        }
+        return bytes.buffer;
+      }
+
+      // Synthesizes speech audio directly into WebAudio stream so it is embedded in the recorded video file
       async speakToVideoStream(text) {
         const clean = cleanTtsText(text);
         if (!clean) return;
+        this.setUI(true, clean);
 
-        // Try direct fetch for video canvas stream mixing
-        const urls = [
-          `https://api.streamelements.com/kappa/v2/speech?voice=Aditi&text=${encodeURIComponent(clean)}`,
-          `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=hi&q=${encodeURIComponent(clean)}`
-        ];
-        for (const url of urls) {
-          try {
-            const resp = await fetch(url, { mode: 'cors' });
-            if (resp.ok) {
-              const buf = await resp.arrayBuffer();
-              if (buf && buf.byteLength > 600) {
-                await soundEngine.playAudioBuffer(buf, state.voiceSpeed);
-                return;
+        try {
+          // 1. If running in Android Capacitor APK with NativeTts.synthesizeToBase64, bake real Hindi TTS audio into video!
+          const nativeTts = this.getNativePlugin();
+          if (nativeTts && typeof nativeTts.synthesizeToBase64 === 'function') {
+            try {
+              const chunks = this.splitTextForTts(clean, 180);
+              for (const chunk of chunks) {
+                const res = await nativeTts.synthesizeToBase64({
+                  text: chunk,
+                  rate: Number(state.voiceSpeed) || 1.15,
+                  pitch: Number(state.voicePitch) || 1.00
+                });
+                if (res && res.base64) {
+                  const arrBuf = this.base64ToArrayBuffer(res.base64);
+                  await soundEngine.playAudioBuffer(arrBuf, 1.0);
+                }
               }
+              this.setUI(false);
+              return;
+            } catch (nativeErr) {
+              console.warn('NativeTts synthesizeToBase64 fallback:', nativeErr);
             }
-          } catch (_) {}
+          }
+
+          // 2. Try web audio TTS endpoints (chunked for longer Hindi sentences)
+          const chunks = this.splitTextForTts(clean, 150);
+          let playedFromWebAudio = false;
+          for (const chunk of chunks) {
+            const urls = [
+              `https://api.streamelements.com/kappa/v2/speech?voice=Aditi&text=${encodeURIComponent(chunk)}`,
+              `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=hi&q=${encodeURIComponent(chunk)}`
+            ];
+            let chunkDone = false;
+            for (const url of urls) {
+              try {
+                const resp = await fetch(url, { mode: 'cors' });
+                if (resp.ok) {
+                  const buf = await resp.arrayBuffer();
+                  if (buf && buf.byteLength > 600) {
+                    await soundEngine.playAudioBuffer(buf, state.voiceSpeed);
+                    playedFromWebAudio = true;
+                    chunkDone = true;
+                    break;
+                  }
+                }
+              } catch (_) {}
+            }
+            if (!chunkDone) break;
+          }
+
+          if (playedFromWebAudio) {
+            this.setUI(false);
+            return;
+          }
+
+          // 3. Fallback to speechSynthesis (plays aloud on device; if captureMic is ON, mic also records speaker audio)
+          await this.speak(clean);
+        } finally {
+          this.setUI(false);
         }
-        // Fallback to live speak
-        await this.speak(clean);
       }
       stop() {
         const nativeTts = this.getNativePlugin();
@@ -2223,6 +2304,21 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       canvas.height = isLand ? 1080 : 1920;
 
       const videoStream = canvas.captureStream(30);
+      let micStreamRef = null;
+      if (state.captureMic && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+        try {
+          micStreamRef = await navigator.mediaDevices.getUserMedia({ audio: true });
+          if (soundEngine.ctx && soundEngine.dest) {
+            const micSrc = soundEngine.ctx.createMediaStreamSource(micStreamRef);
+            const micGain = soundEngine.ctx.createGain();
+            micGain.gain.value = 1.0;
+            micSrc.connect(micGain);
+            micGain.connect(soundEngine.dest);
+          }
+        } catch (micErr) {
+          console.warn('Mic capture skipped:', micErr);
+        }
+      }
       const tracks = [...videoStream.getVideoTracks()];
       if (soundEngine.dest) tracks.push(...soundEngine.dest.stream.getAudioTracks());
       const combinedStream = new MediaStream(tracks);
@@ -2360,6 +2456,9 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         }
       } finally {
         clearInterval(renderTimer);
+        if (micStreamRef) {
+          micStreamRef.getTracks().forEach(t => { try { t.stop(); } catch (_) {} });
+        }
         recorder.stop();
         await new Promise(r => recorder.onstop = r);
         state.isRecording = false;
