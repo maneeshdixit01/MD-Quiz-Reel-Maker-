@@ -23,6 +23,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+          cache: 'gradle'
 
       - name: Install Dependencies
         run: npm install
@@ -37,18 +38,38 @@ jobs:
           fi
           npx cap sync android
 
-      - name: Add Google Maven Central Mirror
+      - name: Add Google Maven Central Mirror & Init Rules
         run: |
           python3 - <<'PY'
           path = "android/build.gradle"
           with open(path, "r", encoding="utf-8") as f:
               text = f.read()
-          mirror = 'maven { url "https://maven-central.storage-download.googleapis.com/maven2/" }\n        mavenCentral()'
+          mirror = 'maven { url "https://maven-central.storage-download.googleapis.com/maven2/" }\n        maven { url "https://repo1.maven.org/maven2/" }\n        mavenCentral()'
           if "maven-central.storage-download.googleapis.com" not in text:
               text = text.replace("mavenCentral()", mirror)
               with open(path, "w", encoding="utf-8") as f:
                   f.write(text)
           PY
+
+          mkdir -p ~/.gradle
+          cat << 'EOF' > ~/.gradle/init.gradle
+          allprojects {
+            buildscript {
+              repositories {
+                maven { url 'https://maven.google.com' }
+                maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }
+                maven { url 'https://repo1.maven.org/maven2/' }
+                gradlePluginPortal()
+              }
+            }
+            repositories {
+              maven { url 'https://maven.google.com' }
+              maven { url 'https://maven-central.storage-download.googleapis.com/maven2/' }
+              maven { url 'https://repo1.maven.org/maven2/' }
+              gradlePluginPortal()
+            }
+          }
+          EOF
 
       - name: Install Native Android Plugins (Hindi TTS + MP4 VideoFixer)
         run: |
@@ -97,11 +118,11 @@ jobs:
         working-directory: android
         run: |
           chmod +x gradlew
-          ./gradlew assembleDebug --refresh-dependencies || ./gradlew assembleDebug
+          ./gradlew assembleDebug --no-daemon --stacktrace
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: MD-Quiz-Reel-Maker-v10-APK
+          name: MD-Quiz-Reel-Maker-v16-APK
           path: android/app/build/outputs/apk/debug/app-debug.apk
           
