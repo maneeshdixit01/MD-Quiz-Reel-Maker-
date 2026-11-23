@@ -1376,7 +1376,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         const wasSpeaking = Boolean(this.synth && (this.synth.speaking || this.synth.pending));
         this.stop();
         if (wasSpeaking) {
-          await new Promise(r => setTimeout(r, 40));
+          await new Promise(r => setTimeout(r, 50));
         }
         this.setUI(true, clean);
 
@@ -1397,6 +1397,9 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
 
         return new Promise((resolve) => {
           if (!this.synth) { this.setUI(false); return resolve(); }
+          if (!this.voices || !this.voices.length) {
+            try { this.voices = this.synth.getVoices() || []; } catch (_) {}
+          }
           const utter = new SpeechSynthesisUtterance(clean);
           utter.lang = 'hi-IN';
           utter.rate = Number(state.voiceSpeed) || 1.15;
@@ -1410,11 +1413,23 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
             if (hiVoice) utter.voice = hiVoice;
           }
 
-          utter.onend = utter.onerror = () => {
+          let settled = false;
+          const finish = () => {
+            if (settled) return;
+            settled = true;
             this.setUI(false);
             resolve();
           };
-          this.synth.speak(utter);
+
+          utter.onend = utter.onerror = finish;
+          try {
+            if (this.synth.paused && typeof this.synth.resume === 'function') {
+              this.synth.resume();
+            }
+            this.synth.speak(utter);
+          } catch (_) {
+            finish();
+          }
         });
       }
       splitTextForTts(text, maxLen = 160) {
@@ -1931,7 +1946,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       // 1. Float options in smoothly with Sak-sak arrow whoosh
       triggerFloatingOptionsEntrance();
 
-      // 2. Speak question text (TTS strictly ignores #tag!)
+      // 2. Speak question text IMMEDIATELY (TTS strictly ignores #tag!)
       const spokenQText = stripHashTagForSpeech(q.q || q.question || '');
       const cd = Number(state.countdownSec) || 3;
       const estSpeechSec = getQuestionAudioDurationSec(q);
@@ -1949,6 +1964,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         dom.stageBottomHintText.textContent = 'सही उत्तर कमेंट में बताएं 👇';
       }
 
+      setStageTimerDisplay(cd, cd);
       const questionSpeechPromise = speechStudio.speak(spokenQText);
 
       const timerPromise = (async () => {
