@@ -1456,6 +1456,15 @@
         </div>
 
         <div class="form-group" style="margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--border);">
+          <div class="toggle-row" style="margin-top:0; margin-bottom:8px;">
+            <span>🎯 शुरुआत में Hook Card (वैकल्पिक — डिफ़ॉल्ट बंद)</span>
+            <input type="checkbox" id="settingHookEnabled" class="switch" />
+          </div>
+          <div id="hookFieldsWrap" style="display:none; margin-bottom:10px; background:#0f172a; border:1px solid var(--border); border-radius:10px; padding:10px;">
+            <label for="settingHookText">Hook संदेश (2.5 सेकंड दिखेगा)</label>
+            <input type="text" id="settingHookText" placeholder="जैसे: पिछले 5 वर्षों के सबसे महत्वपूर्ण सवाल — क्या आप सही कर पाएंगे?" maxlength="140" />
+          </div>
+
           <div style="display:flex; align-items:center; justify-content:space-between; gap:8px; flex-wrap:wrap; margin-bottom:6px;">
             <label for="settingOutroText" style="margin-bottom:0;">📢 वीडियो के अंत का संदेश (Outro / End Message — वैकल्पिक)</label>
             <button type="button" class="btn btn-ghost btn-sm" id="btnPreviewOutro">👁️ अंतिम स्लाइड देखें</button>
@@ -1831,6 +1840,8 @@ Ans: C"></textarea>
     topic: 'Current Affairs',
     optionMode: 'floating',
     optionSound: 'sak',
+    hookEnabled: false,
+    hookText: 'पिछले 5 वर्षों के सबसे महत्वपूर्ण सवाल — क्या आप सही कर पाएंगे?',
     outroText: '',
     outroSec: 3,
     sound: true,
@@ -1953,6 +1964,9 @@ Ans: C"></textarea>
       settingTopic: document.getElementById('settingTopic'),
       settingOptionMode: document.getElementById('settingOptionMode'),
       settingOptionSound: document.getElementById('settingOptionSound'),
+      settingHookEnabled: document.getElementById('settingHookEnabled'),
+      settingHookText: document.getElementById('settingHookText'),
+      hookFieldsWrap: document.getElementById('hookFieldsWrap'),
       settingOutroText: document.getElementById('settingOutroText'),
       settingOutroSec: document.getElementById('settingOutroSec'),
       btnPreviewOutro: document.getElementById('btnPreviewOutro'),
@@ -2157,6 +2171,13 @@ Ans: C"></textarea>
       }
     }
 
+    if (el.settingHookEnabled) {
+      el.settingHookEnabled.checked = Boolean(settings.hookEnabled);
+      if (el.hookFieldsWrap) el.hookFieldsWrap.style.display = settings.hookEnabled ? 'block' : 'none';
+    }
+    if (el.settingHookText) {
+      el.settingHookText.value = settings.hookText || '';
+    }
     if (el.settingOptionMode) {
       el.settingOptionMode.value = settings.optionMode === 'static' ? 'static' : 'floating';
     }
@@ -2738,6 +2759,17 @@ Ans: C"></textarea>
     const baseRevealSec = Number(settings.revealSec) || 2.5;
     const segments = [];
     let cursor = 0;
+    if (settings.hookEnabled && (settings.hookText || '').trim()) {
+      const hookDur = 2.5;
+      segments.push({
+        type: 'hook',
+        start: 0,
+        end: hookDur,
+        duration: hookDur,
+        text: settings.hookText.trim()
+      });
+      cursor = hookDur;
+    }
 
     for (let i = 0; i < questions.length; i++) {
       const q = questions[i];
@@ -4122,9 +4154,19 @@ Ans: C"></textarea>
     const optW = W - 128 * S;
 
     const maxVisOpt = state.visibleOptionCount !== undefined ? state.visibleOptionCount : 4;
+    const isFloatingActive = (settings.optionMode || 'floating') === 'floating' && !state.isRevealed;
     for (let i = 0; i < 4; i++) {
       if (i >= maxVisOpt) continue;
-      const y = optsTop + i * (optH + optGap);
+      let slideLift = 0;
+      if (isFloatingActive && i === maxVisOpt - 1) {
+        const timerTotal = Math.max(0.5, Number(state.timerTotal) || Number(settings.timerSec) || 5);
+        const elapsedInTimer = Math.max(0, timerTotal - (Number(state.remainingSec) || 0));
+        const windowSec = Math.max(0.35, timerTotal * 0.5);
+        const slotSpan = windowSec / 4;
+        const slotLocal = Math.max(0, Math.min(1, (elapsedInTimer - i * slotSpan) / Math.max(0.12, slotSpan * 0.75)));
+        slideLift = (1 - slotLocal) * 36 * S;
+      }
+      const y = optsTop + i * (optH + optGap) + slideLift;
       const isCorrect = i === state.questionObj.correctIndex;
       const highlightGreen = state.isRevealed && isCorrect;
       const dimOthers = state.isRevealed && !isCorrect;
@@ -4433,6 +4475,63 @@ Ans: C"></textarea>
     ctx.restore();
   }
 
+  function drawHookFrame(hookText, hookProgress = 0.5) {
+    if (!ctx || !el.canvas) return;
+    const W = el.canvas.width;
+    const H = el.canvas.height;
+    const S = isLandscapeFormat() ? (W / 1920) : (W / 1080);
+    const theme = THEMES[settings.theme] || THEMES.white_blue;
+
+    const bgGrad = ctx.createLinearGradient(0, 0, W, H);
+    bgGrad.addColorStop(0, theme.bgTop);
+    bgGrad.addColorStop(0.5, theme.bgMid);
+    bgGrad.addColorStop(1, theme.bgBot);
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, W, H);
+
+    const cardW = W - 140 * S;
+    const cardH = isLandscapeFormat() ? 420 * S : 580 * S;
+    const cardX = (W - cardW) / 2;
+    const cardY = (H - cardH) / 2;
+
+    ctx.save();
+    drawRoundedRect(ctx, cardX, cardY, cardW, cardH, 36 * S);
+    ctx.fillStyle = theme.qCardBg;
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.22)';
+    ctx.shadowBlur = 28 * S;
+    ctx.shadowOffsetY = 10 * S;
+    ctx.fill();
+    ctx.restore();
+
+    drawRoundedRect(ctx, cardX, cardY, cardW, cardH, 36 * S);
+    ctx.lineWidth = 4 * S;
+    ctx.strokeStyle = theme.qCardBorder;
+    ctx.stroke();
+
+    const fit = fitTextLines(ctx, hookText, cardW - 80 * S, cardH - 120 * S, 54 * S, 28 * S, '900');
+    ctx.font = `900 ${fit.size}px "Noto Sans Devanagari", "Poppins", sans-serif`;
+    ctx.fillStyle = theme.qText;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    const totalH = fit.lines.length * fit.lineHeight;
+    let curY = cardY + (cardH - totalH) / 2 + fit.lineHeight / 2;
+    for (const line of fit.lines) {
+      ctx.fillText(line, W / 2, curY);
+      curY += fit.lineHeight;
+    }
+
+    // Subtle bottom bar
+    const barW = cardW - 120 * S;
+    const barX = (W - barW) / 2;
+    const barY = cardY + cardH - 44 * S;
+    drawRoundedRect(ctx, barX, barY, barW, 10 * S, 5 * S);
+    ctx.fillStyle = theme.timerTrack;
+    ctx.fill();
+    drawRoundedRect(ctx, barX, barY, Math.max(10 * S, barW * (1 - hookProgress)), 10 * S, 5 * S);
+    ctx.fillStyle = theme.timerRing;
+    ctx.fill();
+  }
+
   function drawOutroPreview() {
     try {
       syncCanvasResolution();
@@ -4736,6 +4835,18 @@ Ans: C"></textarea>
       activePlan.segments.find((s) => elapsedSec >= s.start && elapsedSec < s.end) ||
       activePlan.segments[activePlan.segments.length - 1];
 
+    if (seg.type === 'hook') {
+      return {
+        done: false,
+        progressPct: (elapsedSec / totalDuration) * 100,
+        qIndex: 0,
+        phase: 'hook',
+        displaySec: Number(settings.timerSec) || 5,
+        hookText: seg.text,
+        hookProgress: Math.min(1, elapsedSec / Math.max(0.2, seg.duration))
+      };
+    }
+
     if (seg.type === 'outro') {
       const outroT = elapsedSec - seg.start;
       return {
@@ -4953,7 +5064,9 @@ Ans: C"></textarea>
         return;
       }
 
-      if (step.phase === 'outro') {
+      if (step.phase === 'hook') {
+        drawHookFrame(step.hookText, step.hookProgress);
+      } else if (step.phase === 'outro') {
         drawOutroFrame(step.outroProgress, step.outroFade);
         if (!playedOutro) {
           playedOutro = true;
@@ -5261,7 +5374,9 @@ Ans: C"></textarea>
       el.progressBar.style.width = `${pct}%`;
       el.progressPercent.textContent = `${pct}%`;
 
-      if (step.phase === 'outro') {
+      if (step.phase === 'hook') {
+        drawHookFrame(step.hookText, step.hookProgress);
+      } else if (step.phase === 'outro') {
         drawOutroFrame(step.outroProgress, step.outroFade);
         el.progressText.textContent = 'अंतिम संदेश (Outro) रिकॉर्ड हो रहा है...';
         if (!playedOutro) {
@@ -6268,6 +6383,13 @@ Ans: C"></textarea>
         settings.topic = el.settingTopic ? el.settingTopic.value : '';
       }
 
+      if (el.settingHookEnabled) {
+        settings.hookEnabled = Boolean(el.settingHookEnabled.checked);
+        if (el.hookFieldsWrap) el.hookFieldsWrap.style.display = settings.hookEnabled ? 'block' : 'none';
+      }
+      if (el.settingHookText) {
+        settings.hookText = el.settingHookText.value;
+      }
       if (el.settingOptionMode) {
         settings.optionMode = el.settingOptionMode.value === 'static' ? 'static' : 'floating';
       }
@@ -6319,6 +6441,8 @@ Ans: C"></textarea>
       el.settingBrand,
       el.settingTopicPreset,
       el.settingTopic,
+      el.settingHookEnabled,
+      el.settingHookText,
       el.settingOptionMode,
       el.settingOptionSound,
       el.settingOutroSec,
