@@ -1234,7 +1234,7 @@
                 <audio id="formAudioPreview" controls></audio>
                 <button type="button" class="btn btn-danger btn-sm" id="btnFormVoiceClear">🗑️ आवाज़ हटाएं</button>
               </div>
-              <div class="hint">चाहें तो इस प्रश्न को खुद बोलकर रिकॉर्ड करें (यह सीधे MP4 वीडियो में साफ आवाज़ में जुड़ जाएगी), या खाली छोड़ दें—तब कंप्यूटर की ऑटो हिंदी आवाज़ चलेगी।</div>
+              <div class="hint">प्रश्न में # लगाकर परीक्षा/साल लिखें (जैसे #यूपीपीसीएस2022)—स्क्रीन पर दिखेगा, आवाज़ उसे नहीं पढ़ेगी। चाहें तो खुद बोलकर रिकॉर्ड करें (यह सीधे MP4 वीडियो में साफ आवाज़ में जुड़ जाएगी), या खाली छोड़ दें—तब कंप्यूटर की ऑटो हिंदी आवाज़ चलेगी।</div>
             </div>
 
             <div class="btn-row" style="margin-top: 14px;">
@@ -2479,8 +2479,14 @@ Ans: C"></textarea>
     );
   }
 
+  function stripHashTagForSpeech(text) {
+    const raw = String(text || '');
+    const hashIdx = raw.indexOf('#');
+    return hashIdx >= 0 ? raw.slice(0, hashIdx) : raw;
+  }
+
   function cleanTtsText(text) {
-    return String(text || '')
+    return stripHashTagForSpeech(text)
       .replace(/[🔔📲👍👇⏳🙏✓✕🎙️🔊🤖📺🎥⚡📋📝➕✅✏️🗑️👁️📂🔇]/g, '')
       .replace(/\s+/g, ' ')
       .trim();
@@ -2575,7 +2581,7 @@ Ans: C"></textarea>
   }
 
   function estimateHindiTtsSeconds(text) {
-    const clean = String(text || '').replace(/[🔔📲👍👇⏳🙏✓✕]/g, '').trim();
+    const clean = stripHashTagForSpeech(text).replace(/[🔔📲👍👇⏳🙏✓✕]/g, '').trim();
     if (!clean) return 0;
     const rate = Number(settings.ttsRate) || 0.95;
     // Devanagari averages ~11-13 spoken characters per second at 1.0x
@@ -4878,7 +4884,7 @@ Ans: C"></textarea>
           remainingSec: timerSec,
           timerTotal: timerSec,
           isVoiceLeadIn: true,
-          visibleOptionCount: (settings.optionMode || 'floating') === 'floating' ? 0 : 4,
+          visibleOptionCount: 4,
           isRevealed: false,
           revealProgress: 0,
           fadeAlpha: fadeIn
@@ -4901,7 +4907,9 @@ Ans: C"></textarea>
           remainingSec: remaining,
           timerTotal: timerSec,
           isVoiceLeadIn: false,
-          visibleOptionCount: (settings.optionMode || 'floating') === 'floating' ? Math.max(1, Math.min(4, Math.floor(((timerTotal - remaining) / Math.max(0.35, timerTotal * 0.5)) * 4) + 1)) : 4,
+          visibleOptionCount: (settings.optionMode || 'floating') === 'floating'
+            ? Math.max(1, Math.min(4, Math.floor(((timerTotal - remaining) / Math.max(0.3, timerTotal * 0.5)) * 4) + 1))
+            : 4,
           isRevealed: false,
           revealProgress: 0,
           fadeAlpha: seg.leadInSec > 0 ? 1 : fadeIn
@@ -5353,20 +5361,38 @@ Ans: C"></textarea>
     let lastRevealQ = -1;
     let playedOutro = false;
 
-    function renderLoop(now) {
-      if (!isRecording || abortRequested) return;
-      const elapsedSec = (now - startTime) / 1000;
+    let recFinishedTriggered = false;
+    let recIntervalId = null;
+
+    const origCleanup = cleanupRecordingResources;
+    cleanupRecordingResources = function patchedCleanup() {
+      if (recIntervalId) {
+        clearInterval(recIntervalId);
+        recIntervalId = null;
+      }
+      origCleanup();
+      cleanupRecordingResources = origCleanup;
+    };
+
+    function renderLoop() {
+      if (!isRecording || abortRequested || recFinishedTriggered) return;
+      const elapsedSec = (performance.now() - startTime) / 1000;
       const step = computeTimelineFrame(elapsedSec, plan);
 
       if (step.done) {
+        recFinishedTriggered = true;
+        if (recIntervalId) {
+          clearInterval(recIntervalId);
+          recIntervalId = null;
+        }
         el.progressBar.style.width = '100%';
         el.progressPercent.textContent = '100%';
         el.progressText.textContent = 'वीडियो फाइनल हो रहा है...';
         setTimeout(() => {
           if (activeRecorder && activeRecorder.state !== 'inactive') {
-            activeRecorder.stop();
+            try { activeRecorder.stop(); } catch (_) {}
           }
-        }, 180);
+        }, 220);
         return;
       }
 
@@ -5412,11 +5438,10 @@ Ans: C"></textarea>
           triggerAnswerAudio(audio, step.frame.questionObj);
         }
       }
-
-      rafId = requestAnimationFrame(renderLoop);
     }
 
-    rafId = requestAnimationFrame(renderLoop);
+    renderLoop();
+    recIntervalId = setInterval(renderLoop, 33);
   }
 
   function buildFileName() {
