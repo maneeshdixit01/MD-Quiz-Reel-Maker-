@@ -172,7 +172,7 @@
 </head>
 <body class="min-h-screen flex flex-col selection:bg-yellow-400/20 selection:text-yellow-300">
 
-  <!-- TOP STICKY STUDIO HEADER (Responsive, No Overlap) -->
+  <!-- TOP STICKY STUDIO HEADER -->
   <header class="sticky top-0 z-40 bg-[#0B0F17]/95 backdrop-blur-md border-b border-[#1E293B]">
     <div class="max-w-[1300px] mx-auto px-3 sm:px-6 py-2.5 min-h-16 flex flex-wrap items-center justify-between gap-2">
       <div class="flex items-center gap-2 min-w-0">
@@ -265,7 +265,7 @@
             <input type="text" id="inputExplanationText" placeholder="जैसे: अनुच्छेद 213 के तहत राज्यपाल विधानमंडल के सत्र में न होने पर अध्यादेश जारी कर सकता है।" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-emerald-400 rounded-xl px-3 py-2 text-xs text-white outline-none">
           </div>
 
-          <!-- Per-question Voice Record & Audio Upload -->
+          <!-- Per-question Voice Record & Audio Upload (from v13) -->
           <div class="p-2.5 rounded-xl bg-[#0E1420] border border-[#1E293B] space-y-2 text-xs">
             <div class="flex items-center justify-between">
               <span class="font-bold text-slate-300">🎙️ अपनी आवाज़ जोड़ें (वैकल्पिक)</span>
@@ -341,7 +341,7 @@
           <input type="text" id="inputCustomTopic" placeholder="Type custom topic here..." maxlength="80" class="hidden w-full mt-2 bg-[#0E1420] border border-[#FACC15]/60 focus:border-[#FACC15] rounded-xl px-3 py-2 text-xs font-bold text-white outline-none">
         </div>
 
-        <!-- Watermark Preset (Current Affairs & GK Quiz (Hindi), सामान्य ज्ञान और समसामयिकी, Other) -->
+        <!-- Watermark / Channel Preset (Current Affairs & GK Quiz (Hindi), सामान्य ज्ञान और समसामयिकी, Other) -->
         <div>
           <label class="block text-[11px] text-slate-300 font-bold mb-1">Watermark / Channel Name (वॉटरमार्क):</label>
           <select id="selectWatermarkPreset" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE] rounded-xl px-3 py-2 text-xs font-semibold text-white outline-none cursor-pointer">
@@ -487,9 +487,9 @@
           <div class="flex items-center justify-between text-[11px] text-slate-400">
             <span>Outro Duration:</span>
             <div class="flex gap-1.5">
-              <button type="button" data-outrodur="2" class="outro-dur-pick px-2 py-0.5 rounded font-bold cursor-pointer bg-blue-600 text-white">2s</button>
-              <button type="button" data-outrodur="3" class="outro-dur-pick px-2 py-0.5 rounded font-bold cursor-pointer bg-slate-800 text-slate-300">3s</button>
-              <button type="button" data-outrodur="5" class="outro-dur-pick px-2 py-0.5 rounded font-bold cursor-pointer bg-slate-800 text-slate-300">5s</button>
+              <button type="button" data-outrodur="2" class="outro-dur-pick px-2 py-0.5 rounded bg-blue-600 text-white font-bold cursor-pointer">2s</button>
+              <button type="button" data-outrodur="3" class="outro-dur-pick px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-bold cursor-pointer">3s</button>
+              <button type="button" data-outrodur="5" class="outro-dur-pick px-2 py-0.5 rounded bg-slate-800 text-slate-300 font-bold cursor-pointer">5s</button>
             </div>
           </div>
         </div>
@@ -882,36 +882,31 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         id: 'q_demo_1',
         question: "भारत के संविधान के किस अनुच्छेद के अंतर्गत राज्यों के राज्यपाल को अध्यादेश जारी करने की शक्ति प्राप्त है? #UPPSC2022",
         options: ["अनुच्छेद 123", "अनुच्छेद 213", "अनुच्छेद 243", "अनुच्छेद 356"],
-        correctIndex: 1,
-        explanation: "अनुच्छेद 213 के अनुसार, राज्यपाल विधानमंडल के विश्रांतिकाल में अध्यादेश प्रख्यापित कर सकता है।"
+        correctIndex: 1
       },
       {
         id: 'q_demo_2',
         question: "निम्नलिखित में से कौन-सी नदी उत्तर प्रदेश के सोनभद्र जिले से होकर नहीं बहती है? #UPPSC2023",
         options: ["रिहंद", "कनहर", "सोन", "घाघरा"],
-        correctIndex: 3,
-        explanation: "घाघरा नदी अवध और रुहेलखंड क्षेत्र से बहती है, सोनभद्र से इसका कोई संबंध नहीं है।"
+        correctIndex: 3
       },
       {
         id: 'q_demo_3',
         question: "'अभिनव भारत' नामक गुप्त क्रांतिकारी संगठन की स्थापना किसने की थी? #UPPSC2021",
         options: ["भगत सिंह", "विनायक दामोदर सावरकर", "रासबिहारी बोस", "चंद्रशेखर आज़ाद"],
-        correctIndex: 1,
-        explanation: "वर्ष 1904 में वी.डी. सावरकर द्वारा 'मित्र मेला' को ही 'अभिनव भारत' नाम दिया गया था।"
+        correctIndex: 1
       },
       {
         id: 'q_demo_4',
         question: "'रामसर कन्वेंशन' (Ramsar Convention) किसके संरक्षण से संबंधित है? #UPPSC2022",
         options: ["आर्द्रभूमियाँ (Wetlands)", "ओजोन परत", "जैव विविधता", "प्रवाल भित्तियाँ"],
-        correctIndex: 0,
-        explanation: "ईरान के रामसर नगर में 2 फरवरी 1971 को विश्व की आर्द्रभूमियों के संरक्षण हेतु यह संधि हुई थी।"
+        correctIndex: 0
       },
       {
         id: 'q_demo_5',
         question: "भारत में 'अग्रणी बैंक योजना' (Lead Bank Scheme) किस वर्ष शुरू की गई थी? #UPPSC2024",
         options: ["1965", "1969", "1975", "1980"],
-        correctIndex: 1,
-        explanation: "नरीमन समिति की संस्तुतियों पर आरबीआई ने दिसंबर 1969 में लीड बैंक योजना शुरू की थी।"
+        correctIndex: 1
       }
     ];
 
@@ -1137,6 +1132,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
     // ==========================================
     // TEXT HELPER & #TAG STRIPPER
     // ==========================================
+    // Strips everything from '#' onwards so speech NEVER reads '#UPPSC2022'
     function stripHashTagForSpeech(text) {
       const raw = String(text || '');
       const hashIdx = raw.indexOf('#');
@@ -1150,6 +1146,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         .trim();
     }
 
+    // Renders the #tag on screen as a stylish badge
     function formatQuestionHtml(rawText) {
       if (!rawText) return '--';
       if (!rawText.includes('#')) return escapeHtml(rawText);
@@ -1182,7 +1179,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
     }
 
     // ==========================================
-    // WEB AUDIO SOUND SYNTHESIZER
+    // WEB AUDIO SOUND SYNTHESIZER (Pure Client)
     // ==========================================
     class SoundFXStudio {
       constructor() {
@@ -1223,6 +1220,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         const now = this.ctx.currentTime;
 
         if (sType === 'sak') {
+          // Arrow Whoosh "सक!" filtered noise sweep
           const dur = 0.15;
           const buf = this.ctx.createBuffer(1, Math.floor(this.ctx.sampleRate * dur), this.ctx.sampleRate);
           const data = buf.getChannelData(0);
@@ -1245,6 +1243,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
           noise.connect(filter); filter.connect(gain); this.connect(gain);
           noise.start(now); noise.stop(now + dur);
         } else if (sType === 'puk') {
+          // Soft Pop "पुक!"
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
           osc.type = 'sine';
@@ -1255,6 +1254,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
           osc.connect(gain); this.connect(gain);
           osc.start(now); osc.stop(now + 0.09);
         } else if (sType === 'tik') {
+          // Click "टिक!"
           const osc = this.ctx.createOscillator();
           const gain = this.ctx.createGain();
           osc.type = 'square';
@@ -1333,7 +1333,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         });
         if (current) dom.selectVoiceEngine.value = current;
       }
-      setUI(active) {
+      setUI(active, text = '') {
         if (dom.stageSpeakingBadge) {
           dom.stageSpeakingBadge.classList.toggle('hidden', !active);
         }
@@ -1342,7 +1342,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         const clean = cleanTtsText(text);
         if (!clean) return;
         this.stop();
-        this.setUI(true);
+        this.setUI(true, clean);
 
         const nativeTts = this.getNativePlugin();
         if (nativeTts) {
@@ -1355,7 +1355,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
             this.setUI(false);
             return;
           } catch (err) {
-            console.warn('NativeTts fallback:', err);
+            console.warn('NativeTts fallback to browser:', err);
           }
         }
 
@@ -1381,10 +1381,12 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
           this.synth.speak(utter);
         });
       }
+      // For video recording: attempts CORS-friendly Indian Hindi audio buffer synthesis so it mixes into WebAudio
       async speakToVideoStream(text) {
         const clean = cleanTtsText(text);
         if (!clean) return;
 
+        // Try direct fetch for video canvas stream mixing
         const urls = [
           `https://api.streamelements.com/kappa/v2/speech?voice=Aditi&text=${encodeURIComponent(clean)}`,
           `https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=hi&q=${encodeURIComponent(clean)}`
@@ -1401,6 +1403,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
             }
           } catch (_) {}
         }
+        // Fallback to live speak
         await this.speak(clean);
       }
       stop() {
@@ -1444,9 +1447,11 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       resetOptionsToNeutral();
       if (state.optionsMode === 'static') return;
 
+      // Hide all 4 options first
       dom.stageOptRows.forEach(row => row.classList.add('opt-pre-float'));
-      void dom.stageOptRows[0].offsetHeight;
+      void dom.stageOptRows[0].offsetHeight; // Reflow
 
+      // Float options one-by-one in half the countdown timer
       const timerTotal = Number(state.countdownSec) || 3;
       const windowMs = Math.max(700, Math.min(2200, (timerTotal * 0.5) * 1000));
       const staggerMs = Math.round(windowMs / 4);
@@ -1500,6 +1505,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       dom.stageCircleProgress.setAttribute('stroke-dasharray', `${pct}, 100`);
       dom.stageBottomLaserBar.style.width = `${pct}%`;
 
+      // Last 2-sec Red Alert
       const isRedAlert = (typeof val === 'number' && val > 0 && val <= 2 && state.isPlaying);
       const t = THEMES[state.theme] || THEMES.white_blue;
       const activeColor = isRedAlert ? '#EF4444' : t.accent;
@@ -1534,6 +1540,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       const t = THEMES[themeKey] || THEMES.white_blue;
       dom.labelActiveTheme.textContent = t.name;
 
+      // Mockup styling
       dom.reelSmartphoneMockup.style.backgroundImage = `radial-gradient(rgba(15, 23, 42, 0.065) 1.3px, transparent 1.3px), linear-gradient(160deg, ${t.gradTop} 0%, ${t.gradBot} 100%)`;
       dom.reelSmartphoneMockup.style.borderColor = t.phoneBorder;
       dom.stageQuestionCard.style.backgroundColor = t.cardBg;
@@ -1569,6 +1576,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
     // UI REFRESH
     // ==========================================
     function refreshAllUI() {
+      // Topic & Watermark inputs
       dom.selectTopicPreset.value = state.topicPreset;
       dom.inputCustomTopic.classList.toggle('hidden', state.topicPreset !== '__custom__');
       dom.inputCustomTopic.value = state.customTopic;
@@ -1583,6 +1591,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       dom.stageWatermarkLabel.textContent = wmText;
       dom.outroWatermarkBadge.textContent = wmText;
 
+      // Options Mode & Sound
       const isFloating = state.optionsMode === 'floating';
       dom.btnModeFloating.className = `p-2.5 rounded-xl bg-[#0E1420] text-left transition cursor-pointer ${isFloating ? 'border-2 border-[#22D3EE]' : 'border border-[#1E293B]'}`;
       dom.btnModeStatic.className = `p-2.5 rounded-xl bg-[#0E1420] text-left transition cursor-pointer ${!isFloating ? 'border-2 border-[#22D3EE]' : 'border border-[#1E293B]'}`;
@@ -1595,6 +1604,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         btn.className = `optsound-btn py-1.5 rounded-lg bg-[#111827] text-[10px] font-bold cursor-pointer ${act ? 'border-2 border-[#FACC15] text-white' : 'border border-[#1E293B] text-slate-300'}`;
       });
 
+      // Timers & Reveal
       dom.timerSummaryLabel.textContent = `${state.countdownSec}s Timer • ${state.revealSec}s Ans`;
       dom.activeCountdownSecBadge.textContent = `${state.countdownSec}s`;
       dom.cdPickButtons.forEach(b => {
@@ -1607,6 +1617,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         b.className = `rev-pick-btn py-1.5 rounded-lg bg-[#0E1420] text-xs font-bold cursor-pointer ${act ? 'border-2 border-emerald-500 text-white' : 'border border-[#1E293B] text-slate-300'}`;
       });
 
+      // Hook Card & Outro
       dom.toggleHookCard.checked = state.hookEnabled;
       dom.inputHookCardText.classList.toggle('hidden', !state.hookEnabled);
       dom.inputHookCardText.value = state.hookText;
@@ -1620,6 +1631,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         b.className = `outro-dur-pick px-2 py-0.5 rounded font-bold cursor-pointer ${act ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-300'}`;
       });
 
+      // Sliders & Voice
       dom.sliderVoiceSpeed.value = String(state.voiceSpeed);
       dom.displayVoiceSpeed.textContent = `${Number(state.voiceSpeed).toFixed(2)}×`;
       dom.sliderVoicePitch.value = String(state.voicePitch);
@@ -1628,10 +1640,12 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       dom.toggleSoundEffects.checked = state.soundFxEnabled;
       dom.toggleCaptureMic.checked = state.captureMic;
 
+      // Badges
       dom.questionsCounterBadge.textContent = `Total: ${state.questions.length} Qs`;
       dom.activeQNumberBadge.textContent = state.questions.length ? `Q ${state.currentIndex + 1} / ${state.questions.length}` : '0 Qs';
       dom.stageReelBadge.textContent = state.questions.length ? `Q ${state.currentIndex + 1} / ${state.questions.length}` : '0 Qs';
 
+      // Top Story Progress Bar Segments
       dom.stageStoryProgressBar.innerHTML = '';
       const totalSegs = Math.max(1, state.questions.length);
       const t = THEMES[state.theme] || THEMES.white_blue;
@@ -1642,8 +1656,10 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         dom.stageStoryProgressBar.appendChild(seg);
       }
 
+      // Render Questions List
       renderQuestionsListUi();
 
+      // Active Question on Stage
       const activeQ = state.questions[state.currentIndex];
       resetOptionsToNeutral();
       if (activeQ) {
@@ -1757,7 +1773,16 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
     // ==========================================
     // SMART SYNC LIVE PLAYBACK ENGINE
     // ==========================================
-    async function playCurrentQuestionLive(forceNextCallback = null) {
+    function getQuestionAudioDurationSec(q) {
+      if (!q) return 0;
+      const clean = cleanTtsText(q.q || '');
+      if (!clean) return 0;
+      const rate = Number(state.voiceSpeed) || 1.15;
+      // Devanagari speech: ~12.2 characters per second at 1.0x rate + natural pause
+      return Math.max(1.2, (clean.length / (12.2 * rate)) + 0.35);
+    }
+
+        async function playCurrentQuestionLive(forceNextCallback = null) {
       const q = state.questions[state.currentIndex];
       if (!q) return showToast('कृपया पहले प्रश्न जोड़ें!');
 
@@ -1767,17 +1792,37 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       dom.stageOutroOverlay.classList.add('hidden');
       dom.stageStatusTitle.textContent = `Playing Q ${state.currentIndex + 1}...`;
 
+      // 1. Float options in smoothly with Sak-sak arrow whoosh
       triggerFloatingOptionsEntrance();
 
+      // 2. Speak question text (TTS strictly ignores #tag!)
       const spokenQText = stripHashTagForSpeech(q.q);
       const cd = Number(state.countdownSec) || 3;
+      const estSpeechSec = getQuestionAudioDurationSec(q);
+
+      // Smart Timing Calculation:
+      // If question speaking takes 5s and timer is 3s, delaySec = 2s.
+      // For first 2s, timer stays at 3s while question is spoken, then ticks 3 -> 2 -> 1 -> 0.
+      const delaySec = state.voiceTiming === 'after_voice' 
+        ? estSpeechSec 
+        : Math.max(0, estSpeechSec - cd);
+
+      if (delaySec > 0.1 && state.voiceTiming !== 'after_voice') {
+        dom.stageBottomHintText.textContent = `लंबा प्रश्न: बोलने के ${delaySec.toFixed(1)}s बाद टाइमर चलेगा... ⏳`;
+      } else {
+        dom.stageBottomHintText.textContent = 'सही उत्तर कमेंट में बताएं 👇';
+      }
 
       const questionSpeechPromise = speechStudio.speak(spokenQText);
 
       const timerPromise = (async () => {
-        if (state.voiceTiming === 'after_voice') {
-          await questionSpeechPromise;
+        setStageTimerDisplay(cd, cd);
+        if (delaySec > 0) {
+          await new Promise(r => setTimeout(r, Math.round(delaySec * 1000)));
         }
+        if (!state.isPlaying || session !== state.runSessionId) return;
+
+        dom.stageBottomHintText.textContent = 'जल्दी सोचें और कमेंट करें! ⏱️';
         for (let s = cd; s >= 1; s--) {
           if (!state.isPlaying || session !== state.runSessionId) return;
           setStageTimerDisplay(s, cd);
@@ -1792,14 +1837,17 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       await Promise.all([questionSpeechPromise, timerPromise]);
       if (!state.isPlaying || session !== state.runSessionId) return;
 
+      // 3. Reveal correct answer with green glow pop & chime
       highlightCorrectAnswerOnStage();
       soundEngine.playChime();
       dom.stageStatusTitle.textContent = 'Speaking Answer...';
 
+      // 4. Speak ONLY the correct answer text without "सही उत्तर है" (e.g. "मिजोरम")
       const correctTextOnly = q.options[q.correctIndex] || '';
       await speechStudio.speak(correctTextOnly);
       if (!state.isPlaying || session !== state.runSessionId) return;
 
+      // Hold on screen for revealSec
       await new Promise(r => setTimeout(r, (Number(state.revealSec) || 2.5) * 1000));
       if (!state.isPlaying || session !== state.runSessionId) return;
 
@@ -1816,6 +1864,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       state.isPlaying = true;
       const session = ++state.runSessionId;
 
+      // 1. Optional Hook Card at start (2.5 seconds)
       if (state.hookEnabled && state.hookText.trim()) {
         dom.stageHookOverlay.classList.remove('hidden');
         dom.stageHookTextPreview.textContent = state.hookText;
@@ -1824,6 +1873,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         dom.stageHookOverlay.classList.add('hidden');
       }
 
+      // 2. Play all questions sequentially
       for (let i = 0; i < state.questions.length; i++) {
         if (!state.isPlaying || session !== state.runSessionId) break;
         state.currentIndex = i;
@@ -1833,6 +1883,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         });
       }
 
+      // 3. Optional Outro Slide at end
       if (state.isPlaying && session === state.runSessionId && state.outroEnabled) {
         dom.stageOutroOverlay.classList.remove('hidden');
         dom.stageOutroMessagePreview.textContent = state.outroText;
@@ -1869,12 +1920,14 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       const S = isLand ? (W / 1920) : (W / 1080);
       const t = THEMES[state.theme] || THEMES.white_blue;
 
+      // 1. Background Gradient
       const bgGrad = ctx.createLinearGradient(0, 0, W, H);
       bgGrad.addColorStop(0, t.gradTop);
       bgGrad.addColorStop(1, t.gradBot);
       ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, W, H);
 
+      // Subtle Dot Pattern Overlay
       ctx.fillStyle = 'rgba(15, 23, 42, 0.055)';
       for (let dx = 28 * S; dx < W; dx += 36 * S) {
         for (let dy = 28 * S; dy < H; dy += 36 * S) {
@@ -1884,10 +1937,12 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         }
       }
 
+      // Outer border frame
       ctx.strokeStyle = t.phoneBorder;
       ctx.lineWidth = 14 * S;
       ctx.strokeRect(7 * S, 7 * S, W - 14 * S, H - 14 * S);
 
+      // HOOK FRAME
       if (frameOpts.isHook) {
         const cardW = W - 160 * S, cardH = 560 * S;
         const cx = (W - cardW) / 2, cy = (H - cardH) / 2;
@@ -1913,6 +1968,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         return;
       }
 
+      // OUTRO FRAME
       if (frameOpts.isOutro) {
         const cardW = W - 140 * S, cardH = 880 * S;
         const cx = (W - cardW) / 2, cy = (H - cardH) / 2;
@@ -1935,6 +1991,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         ctx.font = `bold ${46 * S}px "Noto Sans Devanagari", sans-serif`;
         wrapCanvasText(ctx, state.outroText, W / 2, cy + 260 * S, cardW - 120 * S, 64 * S, true);
 
+        // Buttons
         const btnY = cy + 540 * S;
         ctx.fillStyle = '#2563EB';
         ctx.beginPath(); ctx.roundRect(cx + 80 * S, btnY, 340 * S, 80 * S, 20 * S); ctx.fill();
@@ -1953,10 +2010,12 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         return;
       }
 
+      // STANDARD QUESTION FRAME
       const SAFE_L = 60 * S;
-      const SAFE_R = isLand ? 60 * S : 120 * S;
+      const SAFE_R = isLand ? 60 * S : 120 * S; // Instagram Reels right-side safe zone
       const CONTENT_W = W - SAFE_L - SAFE_R;
 
+      // 1. Top Story-Style Segmented Progress Bar
       const totalSegs = Math.max(1, frameOpts.totalQ || 1);
       const segGap = 12 * S;
       const segW = (W - 120 * S - segGap * (totalSegs - 1)) / totalSegs;
@@ -1967,6 +2026,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         ctx.fill();
       }
 
+      // 2. Header Watermark & Q counter
       ctx.fillStyle = t.watermark;
       ctx.font = `bold ${32 * S}px "Noto Sans Devanagari", sans-serif`;
       ctx.textAlign = 'left'; ctx.textBaseline = 'middle';
@@ -1976,6 +2036,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       ctx.fillText(`Q ${frameOpts.qIdx + 1} / ${frameOpts.totalQ}`, W - 60 * S, 120 * S);
       ctx.textAlign = 'left';
 
+      // 3. Topic Banner & Countdown Timer
       const bannerW = CONTENT_W - 140 * S;
       if (state.showTopicBanner) {
         ctx.save();
@@ -1992,6 +2053,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         ctx.textAlign = 'left';
       }
 
+      // Compact Countdown Timer
       const isRedAlert = (!frameOpts.reveal && frameOpts.remSec > 0 && frameOpts.remSec <= 2);
       const timerColor = isRedAlert ? '#EF4444' : t.accent;
       const tx = SAFE_L + CONTENT_W - 55 * S;
@@ -2010,6 +2072,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       ctx.fillText(String(frameOpts.remSec), tx, ty + 2 * S);
       ctx.restore();
 
+      // 4. Elevated 3D Question Card with Top Bright Accent Strip
       const qBoxY = 280 * S;
       const qBoxH = 340 * S;
       ctx.save();
@@ -2023,6 +2086,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       ctx.strokeStyle = t.cardBorder; ctx.lineWidth = 5 * S;
       ctx.beginPath(); ctx.roundRect(SAFE_L, qBoxY, CONTENT_W, qBoxH, 32 * S); ctx.stroke();
 
+      // Top color strip
       ctx.save();
       ctx.beginPath(); ctx.roundRect(SAFE_L, qBoxY, CONTENT_W, qBoxH, 32 * S); ctx.clip();
       ctx.fillStyle = t.accent;
@@ -2033,10 +2097,12 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       ctx.font = `bold ${24 * S}px "Noto Sans Devanagari", sans-serif`;
       ctx.fillText('✨ महत्वपूर्ण प्रश्न', SAFE_L + 34 * S, qBoxY + 54 * S);
 
+      // Question text (#tag is drawn on canvas, but ignored by voice!)
       ctx.fillStyle = '#020617';
       ctx.font = `bold ${44 * S}px "Noto Sans Devanagari", sans-serif`;
       wrapCanvasText(ctx, frameOpts.q.q, SAFE_L + 34 * S, qBoxY + 115 * S, CONTENT_W - 68 * S, 60 * S);
 
+      // 5. Options (Floating / Static entrance + Green Glow pop on correct answer)
       const optTopY = 660 * S;
       const optH = 155 * S;
       const optGap = 26 * S;
@@ -2046,6 +2112,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         const p = optProg[idx] !== undefined ? optProg[idx] : 1;
         if (p <= 0.01) return;
 
+        // Smooth ease-out-back curve
         const c1 = 1.70158, c3 = c1 + 1;
         const eased = 1 + c3 * Math.pow(p - 1, 3) + c1 * Math.pow(p - 1, 2);
         const yOffset = (1 - eased) * 160 * S;
@@ -2072,6 +2139,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         ctx.lineWidth = isCorrect ? 6 * S : 3 * S;
         ctx.stroke();
 
+        // Badge
         ctx.fillStyle = isCorrect ? '#059669' : t.accent;
         ctx.beginPath(); ctx.arc(SAFE_L + 64 * S, oy + optH / 2, 34 * S, 0, Math.PI * 2); ctx.fill();
         ctx.fillStyle = '#FFFFFF';
@@ -2080,12 +2148,14 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         ctx.fillText(isCorrect ? '✓' : LETTERS[idx], SAFE_L + 64 * S, oy + optH / 2 + 2 * S);
         ctx.textAlign = 'left';
 
+        // Option Text
         ctx.fillStyle = isCorrect ? '#064E3B' : '#1E293B';
         ctx.font = `bold ${38 * S}px "Noto Sans Devanagari", sans-serif`;
         ctx.fillText(optTxt.slice(0, 36), SAFE_L + 124 * S, oy + optH / 2 + 2 * S);
         ctx.restore();
       });
 
+      // 5b. Explanation Card when correct answer is revealed
       const expStr = (frameOpts.reveal && frameOpts.q && frameOpts.q.explanation) ? String(frameOpts.q.explanation).trim() : '';
       if (expStr) {
         const expY = isLand ? (optTopY + 2 * (optH + optGap) + 12 * S) : (1380 * S);
@@ -2103,6 +2173,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         ctx.restore();
       }
 
+      // 6. Bottom Safe Area CTA & Progress Bar
       const footerY = H - 180 * S;
       ctx.fillStyle = '#334155';
       ctx.font = `bold ${30 * S}px "Noto Sans Devanagari", sans-serif`;
@@ -2136,7 +2207,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
     }
 
     // ==========================================
-    // VIDEO EXPORT ENGINE
+    // VIDEO EXPORT ENGINE (Capacitor + Browser)
     // ==========================================
     async function runVideoExportProcess() {
       if (!state.questions.length) return showToast('कृपया पहले प्रश्न जोड़ें!');
@@ -2180,6 +2251,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         optProgress: [1, 1, 1, 1], reveal: false
       };
 
+      // 30fps render loop
       const renderTimer = setInterval(() => {
         drawReelCanvasFrame(ctx, currentFrameData);
       }, 33);
@@ -2188,6 +2260,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       const wait = (ms) => new Promise(r => setTimeout(r, ms));
 
       try {
+        // 1. Hook Frame
         if (state.hookEnabled && state.hookText.trim()) {
           dom.exportProgressTextMsg.textContent = 'Recording Hook Card...';
           currentFrameData.isHook = true;
@@ -2197,6 +2270,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
           currentFrameData.isHook = false;
         }
 
+        // 2. Questions loop
         const cd = Number(state.countdownSec) || 3;
         for (let i = 0; i < state.questions.length; i++) {
           const q = state.questions[i];
@@ -2204,6 +2278,11 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
           dom.exportPercentNum.textContent = `${pct}%`;
           dom.exportProgressBarFill.style.width = `${pct}%`;
           dom.exportProgressTextMsg.textContent = `Recording Q${i + 1} / ${state.questions.length}...`;
+
+          const estSpeechSec = getQuestionAudioDurationSec(q);
+          const delaySec = state.voiceTiming === 'after_voice' 
+            ? estSpeechSec 
+            : Math.max(0, estSpeechSec - cd);
 
           currentFrameData = {
             isHook: false, isOutro: false,
@@ -2213,8 +2292,10 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
             reveal: false
           };
 
+          // Question speech (strictly ignores #tag)
           const qSpeechP = speechStudio.speakToVideoStream(q.q);
 
+          // Options floating animation in video (floats in one-by-one with sound)
           const optAnimP = (async () => {
             if (state.optionsMode === 'floating') {
               const windowMs = Math.max(700, Math.min(2200, (cd * 0.5) * 1000));
@@ -2241,7 +2322,12 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
             }
           })();
 
+          // Smart Countdown Timer: If question is longer than timer, stays at 3s during extra speaking time, then ticks down!
           const timerP = (async () => {
+            currentFrameData.remSec = cd;
+            if (delaySec > 0) {
+              await wait(Math.round(delaySec * 1000));
+            }
             for (let s = cd; s >= 1; s--) {
               currentFrameData.remSec = s;
               soundEngine.playTick(s <= 2);
@@ -2254,6 +2340,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
 
           await Promise.all([qSpeechP, optAnimP, timerP]);
 
+          // Reveal Correct Answer (Speaks ONLY correct option text)
           currentFrameData.optProgress = [1, 1, 1, 1];
           currentFrameData.reveal = true;
           soundEngine.playChime();
@@ -2263,6 +2350,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
           await Promise.all([ansSpeechP, ansHoldP]);
         }
 
+        // 3. Outro Slide
         if (state.outroEnabled && state.outroText.trim()) {
           dom.exportProgressTextMsg.textContent = 'Recording Outro Slide...';
           currentFrameData = { isHook: false, isOutro: true };
@@ -2278,6 +2366,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         dom.btnExportVideoNow.disabled = false;
       }
 
+      // Final video blob
       const isActualMp4 = mime.includes('mp4');
       const blob = new Blob(chunks, { type: isActualMp4 ? 'video/mp4' : 'video/webm' });
       const videoUrl = URL.createObjectURL(blob);
@@ -2286,10 +2375,12 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       dom.exportProgressBarContainer.classList.add('hidden');
       showToast('🎉 वीडियो तैयार हो गया!');
 
+      // Save handlers
       dom.btnSaveToGallery.onclick = () => saveVideoToDevice(blob, isActualMp4);
       dom.btnShareVideoFile.onclick = () => shareVideoFileDirectly(blob, isActualMp4);
     }
 
+    // Capacitor Native Gallery Saver or Browser Download
     async function saveVideoToDevice(blob, isMp4) {
       const fileName = `Quiz_Reel_${Date.now()}.${isMp4 ? 'mp4' : 'webm'}`;
       try {
@@ -2298,6 +2389,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
           const vf = cap.Plugins && cap.Plugins.VideoFixer;
           const fs = cap.Plugins && cap.Plugins.Filesystem;
           if (vf && vf.remuxAndSaveToGallery) {
+            // Write to cache & remux to gallery
             const reader = new FileReader();
             reader.readAsDataURL(blob);
             reader.onloadend = async () => {
@@ -2310,9 +2402,10 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
           }
         }
       } catch (err) {
-        console.warn('Capacitor save fallback:', err);
+        console.warn('Capacitor native save error, using browser download:', err);
       }
 
+      // Browser Fallback Download
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
       a.download = fileName;
@@ -2434,8 +2527,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
           state.questions = qs;
           state.currentIndex = 0;
           saveQuestions(); refreshAllUI();
-          dom.pdfConverterModal.classList.add('hidden');
-          dom.pdfConverterModal.style.display = 'none';
+          dom.pdfConverterModal.classList.add('hidden'); dom.pdfConverterModal.style.display = 'none';
           showToast(`PDF से ${qs.length} प्रश्न लोड हो गए!`);
         } else {
           showToast('PDF में मानक MCQ प्रश्न नहीं मिले।');
@@ -2451,6 +2543,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
     // BIND ALL INTERACTIONS
     // ==========================================
     function bindAllEvents() {
+      // 1. Manual Form Submit
       dom.mainQuestionForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const text = dom.inputQuestionText.value.trim();
@@ -2476,10 +2569,12 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
 
       dom.btnCancelEditMain.addEventListener('click', resetManualForm);
 
+      // Correct radio buttons
       document.querySelectorAll('.opt-radio-pick').forEach((btn, idx) => {
         btn.addEventListener('click', () => setManualFormCorrectIndex(idx));
       });
 
+      // Topic Preset
       dom.selectTopicPreset.addEventListener('change', (e) => {
         state.topicPreset = e.target.value;
         saveSettings(); refreshAllUI();
@@ -2489,6 +2584,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         saveSettings(); refreshAllUI();
       });
 
+      // Watermark Preset
       dom.selectWatermarkPreset.addEventListener('change', (e) => {
         state.watermarkPreset = e.target.value;
         saveSettings(); refreshAllUI();
@@ -2503,10 +2599,12 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         saveSettings(); refreshAllUI();
       });
 
+      // Themes
       dom.themeCardButtons.forEach(btn => {
         btn.addEventListener('click', () => applyColorTheme(btn.dataset.theme));
       });
 
+      // Options Mode (Floating vs Static)
       dom.btnModeFloating.addEventListener('click', () => {
         state.optionsMode = 'floating';
         saveSettings(); refreshAllUI();
@@ -2520,6 +2618,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         showToast('Static Options Enabled (Sound Muted)');
       });
 
+      // Option Sounds
       dom.optsoundButtons.forEach(btn => {
         btn.addEventListener('click', () => {
           state.optionSound = btn.dataset.optsound;
@@ -2528,10 +2627,12 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         });
       });
 
+      // Timer Styles
       dom.tstyleButtons.forEach(btn => {
         btn.addEventListener('click', () => applyTimerStyle(btn.dataset.timerstyle));
       });
 
+      // Countdown Picks
       dom.cdPickButtons.forEach(b => {
         b.addEventListener('click', () => {
           state.countdownSec = parseInt(b.dataset.sec, 10);
@@ -2539,6 +2640,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         });
       });
 
+      // Reveal Picks
       dom.revPickButtons.forEach(b => {
         b.addEventListener('click', () => {
           state.revealSec = parseFloat(b.dataset.revsec);
@@ -2546,6 +2648,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         });
       });
 
+      // Hook Card
       dom.toggleHookCard.addEventListener('change', (e) => {
         state.hookEnabled = e.target.checked;
         saveSettings(); refreshAllUI();
@@ -2555,6 +2658,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         saveSettings(); refreshAllUI();
       });
 
+      // Outro
       dom.toggleOutroSlide.addEventListener('change', (e) => {
         state.outroEnabled = e.target.checked;
         saveSettings(); refreshAllUI();
@@ -2570,6 +2674,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         });
       });
 
+      // Voice Sliders
       dom.sliderVoiceSpeed.addEventListener('input', (e) => {
         state.voiceSpeed = parseFloat(e.target.value);
         dom.displayVoiceSpeed.textContent = `${state.voiceSpeed.toFixed(2)}×`;
@@ -2600,6 +2705,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         saveSettings();
       });
 
+      // Format Switcher (Portrait 9:16 vs Landscape 16:9)
       dom.btnFmtPortrait.addEventListener('click', () => {
         state.videoFormat = 'portrait';
         dom.btnFmtPortrait.className = 'px-2.5 py-1 rounded-lg bg-blue-600 text-white font-extrabold text-[11px] cursor-pointer';
@@ -2617,6 +2723,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         showToast('📺 YouTube 16:9 Landscape Mode Selected');
       });
 
+      // Playback Controls
       dom.btnPlayCurrentQ.addEventListener('click', () => playCurrentQuestionLive());
       dom.btnPlayAllQs.addEventListener('click', () => playAllQuestionsLive());
       dom.btnStopPlayback.addEventListener('click', () => {
@@ -2624,6 +2731,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         showToast('Playback Stopped');
       });
 
+      // Fullscreen Mode
       dom.btnLaunchFullscreen.addEventListener('click', () => {
         dom.fullscreenOverlayModal.classList.add('open');
         const fsCtx = dom.fsCanvas.getContext('2d');
@@ -2640,8 +2748,10 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       });
       dom.btnCloseFullscreen.addEventListener('click', () => dom.fullscreenOverlayModal.classList.remove('open'));
 
+      // Export Video
       dom.btnExportVideoNow.addEventListener('click', runVideoExportProcess);
 
+      // Header Actions & Modals
       dom.btnLoadDemoHeader.addEventListener('click', () => {
         state.questions = JSON.parse(JSON.stringify(DEFAULT_QUESTIONS));
         state.currentIndex = 0;
@@ -2649,29 +2759,17 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         showToast('5 Demo Questions Loaded!');
       });
 
-      // MODAL OPEN / CLOSE HANDLERS
-      dom.btnOpenBulkModal.addEventListener('click', (e) => {
-        e.preventDefault();
-        dom.bulkPasteModal.classList.remove('hidden');
-        dom.bulkPasteModal.style.display = 'flex';
-        if (dom.bulkPasteInputTextarea) dom.bulkPasteInputTextarea.focus();
-      });
-      dom.btnCloseBulkModal.addEventListener('click', () => {
-        dom.bulkPasteModal.classList.add('hidden');
-        dom.bulkPasteModal.style.display = 'none';
-      });
-      dom.btnCancelBulkModal.addEventListener('click', () => {
-        dom.bulkPasteModal.classList.add('hidden');
-        dom.bulkPasteModal.style.display = 'none';
-      });
+      dom.btnOpenBulkModal.addEventListener('click', () => { dom.bulkPasteModal.classList.remove('hidden'); dom.bulkPasteModal.style.display = 'flex'; if (dom.bulkPasteInputTextarea) dom.bulkPasteInputTextarea.focus(); });
+      dom.btnCloseBulkModal.addEventListener('click', () => { dom.bulkPasteModal.classList.add('hidden'); dom.bulkPasteModal.style.display = 'none'; dom.bulkPasteModal.style.display = 'none'; });
+      dom.btnCancelBulkModal.addEventListener('click', () => { dom.bulkPasteModal.classList.add('hidden'); dom.bulkPasteModal.style.display = 'none'; dom.bulkPasteModal.style.display = 'none'; });
 
       dom.btnApplyBulkQuestions.addEventListener('click', () => {
         const raw = dom.bulkPasteInputTextarea.value.trim();
         if (!raw) return showToast('कृपया प्रश्न पेस्ट करें!');
 
+        // Normalize inline/pipe formats into lines and split blocks by blank line or new question number/Q:
         const normalized = raw
           .replace(/\r\n/g, '\n')
-          .replace(/\r/g, '\n')
           .replace(/\s*\|\s*/g, '\n')
           .replace(/(?:^|\n)(?=(?:Q\d*[\:\.\)]|प्रश्न\s*\d*[\:\.\)]|\d+[\.\)]\s))/gi, '\n\n');
 
@@ -2728,8 +2826,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
           saveQuestions();
           refreshAllUI();
           dom.bulkPasteInputTextarea.value = '';
-          dom.bulkPasteModal.classList.add('hidden');
-          dom.bulkPasteModal.style.display = 'none';
+          dom.bulkPasteModal.classList.add('hidden'); dom.bulkPasteModal.style.display = 'none';
           showToast(`⚡ ${imported.length} प्रश्न सुंदर तरीके से जुड़ गए!`);
         } else {
           showToast('प्रश्न पार्स नहीं हो सके—कृपया सवाल व विकल्प चेक करें।');
@@ -2737,19 +2834,9 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       });
 
       // PDF Modal
-      dom.btnOpenPdfModal.addEventListener('click', (e) => {
-        e.preventDefault();
-        dom.pdfConverterModal.classList.remove('hidden');
-        dom.pdfConverterModal.style.display = 'flex';
-      });
-      dom.btnClosePdfModal.addEventListener('click', () => {
-        dom.pdfConverterModal.classList.add('hidden');
-        dom.pdfConverterModal.style.display = 'none';
-      });
-      dom.btnCancelPdfModal.addEventListener('click', () => {
-        dom.pdfConverterModal.classList.add('hidden');
-        dom.pdfConverterModal.style.display = 'none';
-      });
+      dom.btnOpenPdfModal.addEventListener('click', () => { dom.pdfConverterModal.classList.remove('hidden'); dom.pdfConverterModal.style.display = 'flex'; });
+      dom.btnClosePdfModal.addEventListener('click', () => { dom.pdfConverterModal.classList.add('hidden'); dom.pdfConverterModal.style.display = 'none'; dom.pdfConverterModal.style.display = 'none'; });
+      dom.btnCancelPdfModal.addEventListener('click', () => { dom.pdfConverterModal.classList.add('hidden'); dom.pdfConverterModal.style.display = 'none'; dom.pdfConverterModal.style.display = 'none'; });
       dom.inputPdfFile.addEventListener('change', (e) => {
         if (e.target.files && e.target.files[0]) processUploadedPdf(e.target.files[0]);
       });
@@ -2791,7 +2878,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
     }
 
     // ==========================================
-    // INITIALIZATION & DIRECT DELEGATION
+    // INITIALIZATION
     // ==========================================
     document.addEventListener('click', (e) => {
       const bulkTrigger = e.target.closest('#btnOpenBulkModal');
