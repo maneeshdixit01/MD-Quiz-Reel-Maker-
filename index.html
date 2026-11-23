@@ -880,33 +880,38 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
     const DEFAULT_QUESTIONS = [
       {
         id: 'q_demo_1',
-        question: "भारत के संविधान के किस अनुच्छेद के अंतर्गत राज्यों के राज्यपाल को अध्यादेश जारी करने की शक्ति प्राप्त है? #UPPSC2022",
+        q: "भारत के संविधान के किस अनुच्छेद के अंतर्गत राज्यों के राज्यपाल को अध्यादेश जारी करने की शक्ति प्राप्त है? #UPPSC2022",
         options: ["अनुच्छेद 123", "अनुच्छेद 213", "अनुच्छेद 243", "अनुच्छेद 356"],
-        correctIndex: 1
+        correctIndex: 1,
+        explanation: "अनुच्छेद 213 के तहत राज्यपाल विधानमंडल के सत्र में न होने पर अध्यादेश जारी कर सकता है।"
       },
       {
         id: 'q_demo_2',
-        question: "निम्नलिखित में से कौन-सी नदी उत्तर प्रदेश के सोनभद्र जिले से होकर नहीं बहती है? #UPPSC2023",
+        q: "निम्नलिखित में से कौन-सी नदी उत्तर प्रदेश के सोनभद्र जिले से होकर नहीं बहती है? #UPPSC2023",
         options: ["रिहंद", "कनहर", "सोन", "घाघरा"],
-        correctIndex: 3
+        correctIndex: 3,
+        explanation: "घाघरा नदी सोनभद्र जिले से होकर नहीं बहती है।"
       },
       {
         id: 'q_demo_3',
-        question: "'अभिनव भारत' नामक गुप्त क्रांतिकारी संगठन की स्थापना किसने की थी? #UPPSC2021",
+        q: "'अभिनव भारत' नामक गुप्त क्रांतिकारी संगठन की स्थापना किसने की थी? #UPPSC2021",
         options: ["भगत सिंह", "विनायक दामोदर सावरकर", "रासबिहारी बोस", "चंद्रशेखर आज़ाद"],
-        correctIndex: 1
+        correctIndex: 1,
+        explanation: "विनायक दामोदर सावरकर ने अभिनव भारत संगठन की स्थापना की थी।"
       },
       {
         id: 'q_demo_4',
-        question: "'रामसर कन्वेंशन' (Ramsar Convention) किसके संरक्षण से संबंधित है? #UPPSC2022",
+        q: "'रामसर कन्वेंशन' (Ramsar Convention) किसके संरक्षण से संबंधित है? #UPPSC2022",
         options: ["आर्द्रभूमियाँ (Wetlands)", "ओजोन परत", "जैव विविधता", "प्रवाल भित्तियाँ"],
-        correctIndex: 0
+        correctIndex: 0,
+        explanation: "रामसर कन्वेंशन आर्द्रभूमियों (Wetlands) के संरक्षण से संबंधित है।"
       },
       {
         id: 'q_demo_5',
-        question: "भारत में 'अग्रणी बैंक योजना' (Lead Bank Scheme) किस वर्ष शुरू की गई थी? #UPPSC2024",
+        q: "भारत में 'अग्रणी बैंक योजना' (Lead Bank Scheme) किस वर्ष शुरू की गई थी? #UPPSC2024",
         options: ["1965", "1969", "1975", "1980"],
-        correctIndex: 1
+        correctIndex: 1,
+        explanation: "अग्रणी बैंक योजना वर्ष 1969 में शुरू की गई थी।"
       }
     ];
 
@@ -1349,7 +1354,11 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       async speak(text) {
         const clean = cleanTtsText(text);
         if (!clean) return;
+        const wasSpeaking = Boolean(this.synth && (this.synth.speaking || this.synth.pending));
         this.stop();
+        if (wasSpeaking) {
+          await new Promise(r => setTimeout(r, 40));
+        }
         this.setUI(true, clean);
 
         const nativeTts = this.getNativePlugin();
@@ -1461,11 +1470,17 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
             let chunkDone = false;
             for (const url of urls) {
               try {
-                const resp = await fetch(url, { mode: 'cors' });
+                const ctrl = new AbortController();
+                const tId = setTimeout(() => ctrl.abort(), 3500);
+                const resp = await fetch(url, { mode: 'cors', signal: ctrl.signal });
+                clearTimeout(tId);
                 if (resp.ok) {
                   const buf = await resp.arrayBuffer();
                   if (buf && buf.byteLength > 600) {
-                    await soundEngine.playAudioBuffer(buf, state.voiceSpeed);
+                    await Promise.race([
+                      soundEngine.playAudioBuffer(buf, state.voiceSpeed),
+                      new Promise(r => setTimeout(r, 8000))
+                    ]);
                     playedFromWebAudio = true;
                     chunkDone = true;
                     break;
@@ -1481,8 +1496,11 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
             return;
           }
 
-          // 3. Fallback to speechSynthesis (plays aloud on device; if captureMic is ON, mic also records speaker audio)
-          await this.speak(clean);
+          // 3. Fallback to speechSynthesis with safety timeout so export never hangs
+          await Promise.race([
+            this.speak(clean),
+            new Promise(r => setTimeout(r, 9000))
+          ]);
         } finally {
           this.setUI(false);
         }
@@ -1856,7 +1874,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
     // ==========================================
     function getQuestionAudioDurationSec(q) {
       if (!q) return 0;
-      const clean = cleanTtsText(q.q || '');
+      const clean = cleanTtsText(q.q || q.question || '');
       if (!clean) return 0;
       const rate = Number(state.voiceSpeed) || 1.15;
       // Devanagari speech: ~12.2 characters per second at 1.0x rate + natural pause
@@ -1877,7 +1895,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       triggerFloatingOptionsEntrance();
 
       // 2. Speak question text (TTS strictly ignores #tag!)
-      const spokenQText = stripHashTagForSpeech(q.q);
+      const spokenQText = stripHashTagForSpeech(q.q || q.question || '');
       const cd = Number(state.countdownSec) || 3;
       const estSpeechSec = getQuestionAudioDurationSec(q);
 
@@ -1996,8 +2014,8 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
     // ==========================================
     function drawReelCanvasFrame(ctx, frameOpts) {
       const isLand = state.videoFormat === 'landscape';
-      const W = isLand ? 1920 : 1080;
-      const H = isLand ? 1080 : 1920;
+      const W = (ctx && ctx.canvas && ctx.canvas.width) ? ctx.canvas.width : (isLand ? 1920 : 1080);
+      const H = (ctx && ctx.canvas && ctx.canvas.height) ? ctx.canvas.height : (isLand ? 1080 : 1920);
       const S = isLand ? (W / 1920) : (W / 1080);
       const t = THEMES[state.theme] || THEMES.white_blue;
 
@@ -2300,10 +2318,12 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       const canvas = dom.hiddenExportCanvas;
       const ctx = canvas.getContext('2d');
       const isLand = state.videoFormat === 'landscape';
-      canvas.width = isLand ? 1920 : 1080;
-      canvas.height = isLand ? 1080 : 1920;
+      const isMobileDevice = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent || '');
+      canvas.width = isMobileDevice ? (isLand ? 1280 : 720) : (isLand ? 1920 : 1080);
+      canvas.height = isMobileDevice ? (isLand ? 720 : 1280) : (isLand ? 1080 : 1920);
 
-      const videoStream = canvas.captureStream(30);
+      const fps = isMobileDevice ? 20 : 25;
+      const videoStream = canvas.captureStream(fps);
       let micStreamRef = null;
       if (state.captureMic && navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
         try {
@@ -2350,7 +2370,7 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
       // 30fps render loop
       const renderTimer = setInterval(() => {
         drawReelCanvasFrame(ctx, currentFrameData);
-      }, 33);
+      }, 45);
 
       recorder.start(100);
       const wait = (ms) => new Promise(r => setTimeout(r, ms));
@@ -2565,7 +2585,12 @@ Ans: B" class="w-full bg-[#0E1420] border border-[#1E293B] focus:border-[#22D3EE
         const qRaw = localStorage.getItem(STORAGE_KEY_QUESTIONS);
         if (qRaw) {
           const parsed = JSON.parse(qRaw);
-          if (Array.isArray(parsed) && parsed.length > 0) state.questions = parsed;
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            state.questions = parsed.map(item => ({
+              ...item,
+              q: (item.q || item.question || '').trim()
+            })).filter(item => item.q);
+          }
         }
       } catch (_) {}
       if (!state.questions.length) {
